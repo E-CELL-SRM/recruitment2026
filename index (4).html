@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="assets/logowhite.png" type="image/png">
+<title>E-Cell SRMIST — Recruitment 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#050505;
+    --off-white:#F2F0EB;
+    --green:#00C853;
+    --gray:#8a8a86;
+    --gray-dark:#1a1a1a;
+    --border-dark: rgba(255,255,255,0.1);
+    --border-light: rgba(5,5,5,0.12);
+    --ff-display:'Syne', sans-serif;
+    --ff-body:'Inter', sans-serif;
+    --ff-mono:'JetBrains Mono', monospace;
+    --ease: cubic-bezier(.16,.84,.44,1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--black);
+    color:var(--off-white);
+    font-family:var(--ff-body);
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  img{display:block;width:100%;height:100%;object-fit:cover;}
+  a{color:inherit;text-decoration:none;}
+  ul{list-style:none;}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+  .wrap{max-width:1560px;margin:0 auto;padding:0 48px;}
+  .photo{overflow:hidden;background:var(--gray-dark);}
+  .photo img{width:100%;height:100%;object-fit:cover;}
+
+  /* ===== nav ===== */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:26px 48px;
+    transition:padding .4s var(--ease), background .4s var(--ease), border-color .4s var(--ease);
+    border-bottom:1px solid transparent;
+  }
+  nav.scrolled{
+    padding:16px 48px;
+    background:rgba(5,5,5,0.72);
+    backdrop-filter:blur(14px) saturate(140%);
+    border-bottom:1px solid var(--border-dark);
+  }
+  .logo{
+    display:flex;align-items:center;gap:10px;
+    font-family:var(--ff-display);font-weight:700;font-size:15px;letter-spacing:.02em;
+  }
+  .logo-mark-img{width:30px;height:auto;object-fit:contain;flex-shrink:0;}
+  .logo-sub{display:block;font-family:var(--ff-mono);font-weight:400;font-size:9px;letter-spacing:.18em;color:var(--gray);margin-top:2px;}
+  .nav-links{display:flex;align-items:center;gap:38px;font-size:13px;letter-spacing:.03em;font-weight:600;}
+  .nav-links a{position:relative;padding:4px 0;color:rgba(242,240,235,0.85);transition:color .3s;}
+  .nav-links a:not(.cta)::after{
+    content:"";position:absolute;left:0;bottom:0;width:0;height:1px;background:var(--green);transition:width .3s var(--ease);
+  }
+  .nav-links a:not(.cta):hover{color:var(--off-white);}
+  .nav-links a:not(.cta):hover::after{width:100%;}
+  .cta{
+    border:1px solid var(--green);
+    color:var(--green);
+    padding:10px 18px;
+    border-radius:999px;
+    font-family:var(--ff-mono);
+    font-size:12px;
+    display:inline-flex;align-items:center;gap:8px;
+    transition:all .3s var(--ease);
+  }
+  .cta:hover{background:var(--green);color:var(--black);gap:12px;}
+  .menu-btn{display:none;flex-direction:column;gap:5px;width:26px;}
+  .menu-btn span{height:1.5px;background:var(--off-white);width:100%;transition:all .3s;}
+
+  /* ===== hero ===== */
+  .hero{
+    position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;
+    overflow:hidden;
+  }
+  .hero-bg{position:absolute;inset:0;z-index:0;}
+  .hero-bg img{
+    width:100%;height:100%;object-fit:cover;object-position:center 30%;
+    transform:scale(1.08);
+    animation:heroReveal 1.6s var(--ease) forwards;
+  }
+  @keyframes heroReveal{to{transform:scale(1);}}
+  .hero-bg::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg, rgba(5,5,5,0.55) 0%, rgba(5,5,5,0.15) 30%, rgba(5,5,5,0.2) 60%, rgba(5,5,5,0.92) 100%);
+    z-index:1;
+  }
+  .hero-content{position:relative;z-index:2;padding:0 48px 64px;}
+  .hero-eyebrow{
+    font-family:var(--ff-mono);font-size:13px;letter-spacing:.16em;color:var(--green);
+    margin-bottom:14px;text-transform:uppercase;
+    opacity:0;animation:riseIn .8s var(--ease) forwards;animation-delay:.5s;
+  }
+  .hero h1{
+    font-family:var(--ff-display);font-weight:800;
+    font-size:clamp(52px, 9vw, 128px);
+    line-height:.92;letter-spacing:-.02em;
+    text-transform:uppercase;
+  }
+  .hero h1 .line{display:block;overflow:hidden;}
+  .hero h1 .line span{display:block;opacity:0;transform:translateY(100%);animation:riseIn .9s var(--ease) forwards;}
+  .hero h1 .line:nth-child(1) span{animation-delay:.6s;}
+  .hero h1 .line:nth-child(2) span{animation-delay:.72s;color:var(--green);}
+  @keyframes riseIn{to{opacity:1;transform:translateY(0);}}
+  .hero-tagline{
+    font-family:var(--ff-mono);font-size:15px;letter-spacing:.2em;margin:22px 0 26px;color:var(--off-white);
+    opacity:0;animation:riseIn .8s var(--ease) forwards;animation-delay:.9s;
+  }
+  .hero-sub{
+    max-width:420px;font-size:15px;line-height:1.6;color:rgba(242,240,235,0.72);margin-bottom:34px;
+    opacity:0;animation:riseIn .8s var(--ease) forwards;animation-delay:1s;
+  }
+  .hero-actions{display:flex;align-items:center;gap:28px;flex-wrap:wrap;
+    opacity:0;animation:riseIn .8s var(--ease) forwards;animation-delay:1.1s;
+  }
+  .btn-primary{
+    background:var(--green);color:var(--black);
+    padding:16px 30px;border-radius:999px;
+    font-family:var(--ff-mono);font-weight:700;font-size:13px;letter-spacing:.04em;
+    display:inline-flex;align-items:center;gap:10px;
+    transition:transform .35s var(--ease), box-shadow .35s var(--ease);
+  }
+  .btn-primary:hover{transform:translateY(-3px);box-shadow:0 14px 34px rgba(0,200,83,0.35);}
+  .btn-ghost{
+    font-family:var(--ff-mono);font-size:13px;letter-spacing:.04em;color:var(--off-white);
+    display:inline-flex;align-items:center;gap:8px;
+    border-bottom:1px solid rgba(242,240,235,0.3);padding-bottom:4px;
+    transition:border-color .3s, color .3s, gap .3s;
+  }
+  .btn-ghost:hover{border-color:var(--off-white);gap:12px;}
+  .scroll-tag{
+    position:absolute;left:48px;bottom:26px;z-index:2;
+    font-family:var(--ff-mono);font-size:11px;letter-spacing:.2em;color:rgba(242,240,235,0.55);
+    display:flex;align-items:center;gap:10px;
+  }
+  .scroll-tag::before{content:"";width:22px;height:1px;background:rgba(242,240,235,0.4);}
+
+  /* ===== section shell ===== */
+  section{position:relative;}
+  .label{
+    font-family:var(--ff-mono);font-size:13px;letter-spacing:.12em;color:var(--green);
+    display:flex;align-items:center;gap:10px;margin-bottom:22px;text-transform:uppercase;
+  }
+  .label .num{color:inherit;}
+  .label .txt{color:var(--gray);}
+  .light .label .txt{color:#6b6b66;}
+  .reveal{opacity:0;transform:translateY(36px);transition:opacity .9s var(--ease), transform .9s var(--ease);}
+  .reveal.in{opacity:1;transform:translateY(0);}
+
+  h2.big{
+    font-family:var(--ff-display);font-weight:800;
+    font-size:clamp(34px, 4.4vw, 58px);
+    line-height:1.02;letter-spacing:-.01em;text-transform:uppercase;
+  }
+  .accent{color:var(--green);}
+
+  /* ===== about ===== */
+  .about{background:var(--off-white);color:var(--black);padding:130px 0;}
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:start;}
+  .about-copy p{font-size:15.5px;line-height:1.75;color:#3a3a36;margin:26px 0 46px;max-width:440px;}
+  .stats{display:grid;grid-template-columns:repeat(4,auto);gap:38px;}
+  .stat b{font-family:var(--ff-display);font-size:34px;font-weight:800;display:block;}
+  .stat b .accent{font-weight:800;}
+  .stat span{font-family:var(--ff-mono);font-size:10px;letter-spacing:.08em;color:#6b6b66;line-height:1.5;display:block;margin-top:6px;text-transform:uppercase;}
+  .about-visual{position:relative;}
+  .about-brand{
+    aspect-ratio:4/4.6;border-radius:2px;background:var(--off-white);
+    display:flex;align-items:center;justify-content:center;padding:18%;
+    border:1px solid var(--border-light);
+  }
+  .about-brand img{width:100%;height:auto;object-fit:contain;}
+  .green-block{
+    position:absolute;right:-28px;bottom:-28px;width:64px;height:120px;background:var(--green);z-index:-1;
+  }
+  .dot-grid{
+    position:absolute;top:-24px;right:-24px;width:64px;height:64px;
+    background-image:radial-gradient(rgba(5,5,5,0.35) 1.5px, transparent 1.5px);
+    background-size:10px 10px;
+  }
+
+  /* ===== domains ===== */
+  .domains{background:var(--black);padding:130px 0;}
+  .domains-top{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;margin-bottom:70px;flex-wrap:wrap;}
+  .domains-note{font-size:14px;line-height:1.7;color:var(--gray);max-width:300px;}
+  .domain-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border-dark);border:1px solid var(--border-dark);}
+  .domain-card{
+    background:var(--black);padding:38px 28px 32px;position:relative;overflow:hidden;
+    transition:background .4s var(--ease), transform .4s var(--ease);
+    cursor:pointer;
+  }
+  .domain-card::before{
+    content:"";position:absolute;left:0;top:0;height:2px;width:0;background:var(--green);
+    transition:width .4s var(--ease);
+  }
+  .domain-card:hover{background:#0d0d0d;transform:translateY(-6px);}
+  .domain-card:hover::before{width:100%;}
+  .domain-icon{
+    width:44px;height:44px;border:1px solid var(--border-dark);border-radius:10px;
+    display:flex;align-items:center;justify-content:center;margin-bottom:38px;color:var(--green);
+    transition:border-color .3s, background .3s;
+  }
+  .domain-card:hover .domain-icon{border-color:var(--green);background:rgba(0,200,83,0.08);}
+  .domain-card h3{font-family:var(--ff-display);font-size:19px;font-weight:700;letter-spacing:.01em;margin-bottom:14px;}
+  .domain-card p{font-size:13.5px;line-height:1.65;color:var(--gray);margin-bottom:28px;}
+  .domain-explore{
+    font-family:var(--ff-mono);font-size:11px;letter-spacing:.08em;color:var(--off-white);
+    display:inline-flex;align-items:center;gap:6px;text-transform:uppercase;
+  }
+  .domain-explore svg{transition:transform .3s var(--ease);}
+  .domain-card:hover .domain-explore svg{transform:translateX(5px);}
+
+  /* ===== what we do ===== */
+  .wwd{background:var(--black);padding:0 0 130px;border-top:1px solid var(--border-dark);}
+  .wwd-inner{padding-top:110px;}
+  .wwd h2.big{margin-top:10px;margin-bottom:70px;}
+  .wwd-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border-dark);border:1px solid var(--border-dark);}
+  .wwd-item{padding:40px 30px;background:var(--black);transition:background .4s;}
+  .wwd-item:hover{background:#0d0d0d;}
+  .wwd-num{font-family:var(--ff-mono);font-size:11px;color:var(--green);margin-bottom:22px;display:block;}
+  .wwd-item h4{font-family:var(--ff-display);font-size:20px;font-weight:700;margin-bottom:10px;letter-spacing:.02em;}
+  .wwd-item p{font-size:13px;color:var(--gray);line-height:1.6;max-width:230px;}
+
+  /* ===== experience ===== */
+  .experience{background:var(--black);padding:130px 0;border-top:1px solid var(--border-dark);}
+  .exp-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:70px;align-items:center;}
+  .exp-copy .sub{font-size:14px;color:var(--gray);max-width:360px;margin:22px 0 44px;line-height:1.7;}
+  .exp-list{display:grid;grid-template-columns:1fr 1fr;gap:28px 20px;}
+  .exp-item{display:flex;flex-direction:column;gap:14px;}
+  .exp-icon{
+    width:38px;height:38px;border:1px solid var(--border-dark);border-radius:8px;
+    display:flex;align-items:center;justify-content:center;color:var(--green);
+  }
+  .exp-item span{font-family:var(--ff-mono);font-size:11.5px;letter-spacing:.03em;color:#c9c9c4;text-transform:uppercase;line-height:1.4;}
+  .exp-visual .photo{aspect-ratio:4/3.4;}
+
+  /* ===== culture ===== */
+  .culture{background:var(--off-white);color:var(--black);padding:130px 0;}
+  .culture-top{margin-bottom:60px;max-width:720px;}
+  .culture-top h2{margin-top:10px;}
+  .collage{display:grid;grid-template-columns:1.4fr 1fr;grid-template-rows:1fr 1fr;gap:14px;height:520px;}
+  .collage-a{border-radius:2px;overflow:hidden;grid-row:1/3;height:100%;}
+  .collage-b{border-radius:2px;overflow:hidden;}
+  .collage-c{border-radius:2px;overflow:hidden;}
+  .collage-col{display:grid;grid-template-rows:1fr 1fr;gap:14px;height:100%;}
+  .collage .photo{height:100%;}
+  .collage img{transition:transform .6s var(--ease);}
+  .collage-a:hover img, .collage-b:hover img, .collage-c:hover img{transform:scale(1.04);}
+
+  /* ===== final cta ===== */
+  .final-cta{background:var(--black);padding:150px 0 150px;position:relative;overflow:hidden;border-top:1px solid var(--border-dark);}
+  .fc-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+  .fc-copy p{font-size:15.5px;color:var(--gray);max-width:340px;margin:24px 0 42px;line-height:1.7;}
+  .fc-visual .photo{aspect-ratio:16/13;border-radius:2px;}
+
+  /* ===== footer ===== */
+  footer{background:var(--black);border-top:1px solid var(--border-dark);padding:56px 0 34px;}
+  .footer-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:50px;margin-bottom:56px;}
+  .footer-brand .logo{margin-bottom:14px;}
+  .footer-tag{font-family:var(--ff-mono);font-size:11px;letter-spacing:.16em;color:var(--green);}
+  .footer-cols{display:flex;gap:80px;flex-wrap:wrap;}
+  .footer-col h5{font-family:var(--ff-mono);font-size:11px;letter-spacing:.1em;color:var(--gray);margin-bottom:16px;text-transform:uppercase;}
+  .footer-col a{display:block;font-size:13.5px;color:#d8d8d3;margin-bottom:10px;transition:color .3s;}
+  .footer-col a:hover{color:var(--green);}
+  .socials{display:flex;gap:12px;}
+  .socials a{
+    width:36px;height:36px;border:1px solid var(--border-dark);border-radius:50%;
+    display:flex;align-items:center;justify-content:center;transition:border-color .3s, background .3s;
+  }
+  .socials a:hover{border-color:var(--green);background:rgba(0,200,83,0.08);}
+  .footer-bottom{
+    display:flex;justify-content:space-between;padding-top:26px;border-top:1px solid var(--border-dark);
+    font-family:var(--ff-mono);font-size:11px;color:#6b6b66;flex-wrap:wrap;gap:10px;
+  }
+
+  /* ===== responsive ===== */
+  @media (max-width:1024px){
+    .wrap{padding:0 30px;}
+    nav{padding:20px 30px;}
+    nav.scrolled{padding:14px 30px;}
+    .about-grid,.exp-grid,.fc-grid{grid-template-columns:1fr;}
+    .domain-grid{grid-template-columns:repeat(2,1fr);}
+    .wwd-grid{grid-template-columns:repeat(2,1fr);}
+    .stats{grid-template-columns:repeat(2,auto);row-gap:26px;}
+    .collage{height:auto;grid-template-columns:1fr 1fr;}
+  }
+  @media (max-width:768px){
+    .nav-links{position:fixed;top:0;right:0;height:100vh;width:78%;max-width:320px;
+      background:rgba(5,5,5,0.98);backdrop-filter:blur(20px);
+      flex-direction:column;align-items:flex-start;justify-content:center;gap:30px;padding:0 40px;
+      transform:translateX(100%);transition:transform .45s var(--ease);z-index:99;
+    }
+    .nav-links.open{transform:translateX(0);}
+    .menu-btn{display:flex;z-index:101;}
+    .hero-content{padding:0 24px 50px;}
+    .wrap{padding:0 24px;}
+    nav{padding:20px 24px;}
+    nav.scrolled{padding:14px 24px;}
+    .about,.domains,.wwd-inner,.experience,.culture,.final-cta{padding-top:80px;padding-bottom:80px;}
+    .domain-grid,.wwd-grid{grid-template-columns:1fr;}
+    .exp-list{grid-template-columns:1fr 1fr;}
+    .collage{grid-template-columns:1fr;height:auto;}
+    .collage-col{grid-template-columns:1fr 1fr;grid-template-rows:none;display:grid;}
+    .collage .photo{aspect-ratio:1/1;}
+    .stats{grid-template-columns:1fr 1fr;}
+    .scroll-tag{display:none;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.01ms !important;animation-delay:0s !important;transition-duration:.01ms !important;}
+  }
+  :focus-visible{outline:2px solid var(--green);outline-offset:3px;}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a href="#hero" class="logo">
+    <img src="assets/logowhite.png" alt="E-Cell SRMIST logo" class="logo-mark-img">
+    <div>
+      E-CELL SRMIST
+      <span class="logo-sub">RECRUITMENT 2026</span>
+    </div>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about">ABOUT</a></li>
+    <li><a href="#domains">DOMAINS</a></li>
+    <li><a href="#experience">EXPERIENCE</a></li>
+    <li><a href="#events">EVENTS</a></li>
+    <li><a href="#apply" class="cta">JOIN NOW →</a></li>
+  </ul>
+  <button class="menu-btn" id="menuBtn" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<section class="hero" id="hero">
+  <div class="hero-bg"><img src="assets/hero.png" alt="E-Cell SRMIST team celebrating at E-Summit"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">E-CELL SRMIST</div>
+    <h1>
+      <span class="line"><span>RECRUITMENT</span></span>
+      <span class="line"><span>2026</span></span>
+    </h1>
+    <div class="hero-tagline">THINK. BUILD. SCALE.</div>
+    <p class="hero-sub">India's largest student-run entrepreneurship cell. A community of thinkers, builders and doers.</p>
+    <div class="hero-actions">
+      <a href="#apply" class="btn-primary">APPLY NOW →</a>
+      <a href="#domains" class="btn-ghost">EXPLORE DOMAINS ↓</a>
+    </div>
+  </div>
+  <div class="scroll-tag">SCROLL</div>
+</section>
+
+<section class="about light" id="about">
+  <div class="wrap about-grid">
+    <div class="about-copy reveal">
+      <div class="label"><span class="num">01</span><span>/</span><span class="txt">ABOUT</span></div>
+      <h2 class="big">WE ARE<br>E-CELL SRMIST.</h2>
+      <p>E-Cell SRMIST is the official entrepreneurship cell of SRM Institute of Science and Technology. For over a decade, we've been building a culture of innovation and impact on campus.</p>
+      <div class="stats">
+        <div class="stat"><b>10<span class="accent">+</span></b><span>Years of<br>Legacy</span></div>
+        <div class="stat"><b>500<span class="accent">+</span></b><span>Startups<br>Supported</span></div>
+        <div class="stat"><b>150<span class="accent">+</span></b><span>Events<br>Conducted</span></div>
+        <div class="stat"><b>20K<span class="accent">+</span></b><span>Students<br>Impacted</span></div>
+      </div>
+    </div>
+    <div class="about-visual reveal">
+      <div class="dot-grid"></div>
+      <div class="about-brand">
+        <img src="assets/logoblack.png" alt="E-Cell SRMIST emblem">
+      </div>
+      <div class="green-block"></div>
+    </div>
+  </div>
+</section>
+
+<section class="domains" id="domains">
+  <div class="wrap">
+    <div class="domains-top reveal">
+      <div>
+        <div class="label"><span class="num">02</span><span>/</span><span class="txt">DOMAINS</span></div>
+        <h2 class="big">FOUR PATHS.<br>ONE <span class="accent">MISSION</span>.</h2>
+      </div>
+      <p class="domains-note">Different skills. One vision. Choose your domain. Build your legacy. Make an impact that matters.</p>
+    </div>
+    <div class="domain-grid reveal">
+      <div class="domain-card">
+        <div class="domain-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </div>
+        <h3>TECHNICAL</h3>
+        <p>Build products, solve real-world problems with technology.</p>
+        <div class="domain-explore">EXPLORE <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+      </div>
+      <div class="domain-card">
+        <div class="domain-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+        </div>
+        <h3>CREATIVE</h3>
+        <p>Design, create and communicate ideas that inspire.</p>
+        <div class="domain-explore">EXPLORE <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+      </div>
+      <div class="domain-card">
+        <div class="domain-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        </div>
+        <h3>CORPORATE</h3>
+        <p>Plan, manage and drive initiatives that create impact.</p>
+        <div class="domain-explore">EXPLORE <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+      </div>
+      <div class="domain-card">
+        <div class="domain-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M5 7l-3 6a3 3 0 0 0 6 0l-3-6zM19 7l-3 6a3 3 0 0 0 6 0l-3-6zM5 7h14M8 7h8"/></svg>
+        </div>
+        <h3>LEGAL</h3>
+        <p>Ensure compliance, manage policies and protect ideas.</p>
+        <div class="domain-explore">EXPLORE <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="wwd">
+  <div class="wrap wwd-inner">
+    <div class="reveal">
+      <div class="label"><span class="num">03</span><span>/</span><span class="txt">WHAT WE DO</span></div>
+      <h2 class="big">IDEATE. INNOVATE. <span class="accent">IMPACT.</span></h2>
+    </div>
+    <div class="wwd-grid reveal">
+      <div class="wwd-item"><span class="wwd-num">01</span><h4>BUILD</h4><p>Build solutions that solve real problems.</p></div>
+      <div class="wwd-item"><span class="wwd-num">02</span><h4>DESIGN</h4><p>Design experiences that are intuitive and impactful.</p></div>
+      <div class="wwd-item"><span class="wwd-num">03</span><h4>ORGANIZE</h4><p>Organize events that inspire and bring people together.</p></div>
+      <div class="wwd-item"><span class="wwd-num">04</span><h4>PITCH</h4><p>Pitch ideas, products and solutions with confidence.</p></div>
+      <div class="wwd-item"><span class="wwd-num">05</span><h4>COLLABORATE</h4><p>Collaborate across domains and create together.</p></div>
+      <div class="wwd-item"><span class="wwd-num">06</span><h4>LEAD</h4><p>Lead initiatives that create lasting impact.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="experience" id="experience">
+  <div class="wrap exp-grid">
+    <div class="exp-copy reveal">
+      <div class="label"><span class="num">04</span><span>/</span><span class="txt">THE EXPERIENCE</span></div>
+      <h2 class="big">MORE THAN<br>A <span class="accent">POSITION.</span></h2>
+      <p class="sub">It's a journey of growth, learning and building something bigger than yourself. Here's what you gain with E-Cell.</p>
+      <div class="exp-list">
+        <div class="exp-item"><div class="exp-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><span>Real World<br>Exposure</span></div>
+        <div class="exp-item"><div class="exp-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><span>Mentorship from<br>Industry Leaders</span></div>
+        <div class="exp-item"><div class="exp-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 6l-9.5 9.5-5-5L1 18"/><path d="M17 6h6v6"/></svg></div><span>Leadership<br>Opportunities</span></div>
+        <div class="exp-item"><div class="exp-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg></div><span>Network that<br>Lasts Forever</span></div>
+        <div class="exp-item"><div class="exp-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div><span>Portfolio that<br>Stands Out</span></div>
+      </div>
+    </div>
+    <div class="exp-visual reveal"><div class="photo"><img src="assets/hero.png" alt="E-Cell SRMIST team at E-Summit"></div></div>
+  </div>
+</section>
+
+<section class="culture light">
+  <div class="wrap">
+    <div class="culture-top reveal">
+      <div class="label"><span class="num">05</span><span>/</span><span class="txt">CULTURE</span></div>
+      <h2 class="big">WE DON'T JUST WORK.<br>WE <span class="accent">GROW</span> TOGETHER.<br>WE <span class="accent">CREATE</span> TOGETHER.</h2>
+    </div>
+    <div class="collage reveal">
+      <div class="collage-a photo"><img src="assets/hero.png" alt="E-Cell SRMIST group at E-Summit"></div>
+      <div class="collage-col">
+        <div class="collage-b photo"><img src="assets/hero.png" alt="E-Cell community huddle" style="object-position:center 20%;"></div>
+        <div class="collage-c photo"><img src="assets/hero.png" alt="E-Summit event floor" style="object-position:70% center;"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="final-cta" id="apply">
+  <div class="wrap fc-grid">
+    <div class="fc-copy reveal">
+      <div class="label"><span class="num">06</span><span>/</span><span class="txt">READY TO BUILD THE FUTURE?</span></div>
+      <h2 class="big">YOUR <span class="accent">MOVE.</span></h2>
+      <p>Take the first step towards something bigger.</p>
+      <a href="#" class="btn-primary">APPLY NOW →</a>
+    </div>
+    <div class="fc-visual reveal"><div class="photo"><img src="assets/hero.png" alt="E-Summit crowd and stage lights"></div></div>
+  </div>
+</section>
+
+<footer id="events">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo"><img src="assets/logowhite.png" alt="E-Cell SRMIST logo" class="logo-mark-img"><div>E-CELL<br><span style="font-size:10px;opacity:.6;">SRMIST</span></div></div>
+        <div class="footer-tag">THINK. BUILD. SCALE.</div>
+      </div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h5>Links</h5>
+          <a href="#about">About</a>
+          <a href="#domains">Domains</a>
+          <a href="#experience">Experience</a>
+          <a href="#events">Events</a>
+          <a href="#">Contact</a>
+        </div>
+        <div class="footer-col">
+          <h5>Connect</h5>
+          <div class="socials">
+            <a href="#" aria-label="Instagram"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+            <a href="#" aria-label="LinkedIn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4V8h4v1.5A6 6 0 0 1 16 8z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+            <a href="#" aria-label="YouTube"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22.5 8.5s-.2-1.6-.9-2.3c-.8-.9-1.7-.9-2.2-1C16.2 5 12 5 12 5s-4.2 0-7.4.2c-.5 0-1.4.1-2.2 1-.7.7-.9 2.3-.9 2.3S1.3 10.3 1.3 12v1.9c0 1.7.2 3.5.2 3.5s.2 1.6.9 2.3c.8.9 1.9.9 2.4 1 1.7.1 7.2.2 7.2.2s4.2 0 7.4-.3c.5 0 1.4-.1 2.2-1 .7-.7.9-2.3.9-2.3s.2-1.7.2-3.5V12c0-1.7-.2-3.5-.2-3.5z"/><path d="M10 15l5-3-5-3z"/></svg></a>
+            <a href="#" aria-label="Email"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 E-CELL SRMIST. ALL RIGHTS RESERVED.</span>
+      <span>DESIGNED &amp; BUILT FOR RECRUITMENT 2026</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  }, {passive:true});
+
+  const menuBtn = document.getElementById('menuBtn');
+  const navLinks = document.getElementById('navLinks');
+  menuBtn.addEventListener('click', () => {
+    navLinks.classList.toggle('open');
+    menuBtn.classList.toggle('active');
+  });
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, {threshold:0.15});
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+</body>
+</html>

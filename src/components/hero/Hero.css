@@ -1,0 +1,203 @@
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+  background: var(--black);
+}
+
+.hero-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: var(--black);
+  pointer-events: none;
+}
+
+.hero-grid-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.hero-grid {
+  width: 100%;
+  height: 100%;
+  background-image:
+    linear-gradient(rgba(242, 240, 235, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(242, 240, 235, 0.045) 1px, transparent 1px);
+  background-size: 72px 72px;
+  background-position: center top;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.7), transparent 85%);
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  will-change: transform;
+}
+
+.hero-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+}
+
+.hero-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(5, 5, 5, 0.45) 0%,
+    rgba(5, 5, 5, 0.12) 28%,
+    rgba(5, 5, 5, 0.18) 55%,
+    rgba(5, 5, 5, 0.88) 100%
+  );
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 3;
+  padding: 0 48px 64px;
+  max-width: 1560px;
+}
+
+.hero-eyebrow {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  color: var(--green);
+  margin-bottom: 14px;
+  text-transform: uppercase;
+}
+
+.hero-title {
+  font-family: var(--font-syne), sans-serif;
+  font-weight: 800;
+  font-size: clamp(52px, 9vw, 128px);
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.hero-line {
+  display: block;
+  overflow: hidden;
+}
+
+.hero-line > span {
+  display: block;
+  will-change: transform, clip-path;
+}
+
+.hero-year {
+  color: var(--green);
+  display: inline-block;
+}
+
+.hero-tagline {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 15px;
+  letter-spacing: 0.2em;
+  margin: 22px 0 26px;
+  color: var(--off-white);
+}
+
+.hero-sub {
+  max-width: 420px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(242, 240, 235, 0.72);
+  margin-bottom: 34px;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+
+.btn-ghost {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--off-white);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid rgba(242, 240, 235, 0.3);
+  padding-bottom: 4px;
+  transition:
+    border-color 0.3s,
+    color 0.3s,
+    gap 0.3s;
+}
+
+.btn-ghost:hover {
+  border-color: var(--off-white);
+  gap: 12px;
+}
+
+.scroll-tag {
+  position: absolute;
+  left: 48px;
+  bottom: 26px;
+  z-index: 3;
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: rgba(242, 240, 235, 0.55);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.scroll-tag::before {
+  content: "";
+  width: 22px;
+  height: 1px;
+  background: rgba(242, 240, 235, 0.4);
+}
+
+@media (max-width: 1024px) {
+  .hero-content {
+    padding: 0 30px 56px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    min-height: 100svh;
+  }
+
+  .hero-content {
+    padding: 0 24px 50px;
+  }
+
+  .scroll-tag {
+    display: none;
+  }
+
+  .hero-grid {
+    background-size: 48px 48px;
+  }
+}
+
+@media (max-width: 390px) {
+  .hero-title {
+    font-size: clamp(44px, 14vw, 64px);
+  }
+
+  .hero-actions {
+    gap: 18px;
+  }
+}

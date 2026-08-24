@@ -1,0 +1,23 @@
+.label {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  color: var(--green);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 22px;
+  text-transform: uppercase;
+}
+
+.sep {
+  opacity: 0.5;
+}
+
+.txt {
+  color: var(--gray);
+}
+
+.light .txt {
+  color: #6b6b66;
+}

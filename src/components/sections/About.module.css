@@ -1,0 +1,131 @@
+.about {
+  background: var(--off-white);
+  color: var(--black);
+  padding: 130px 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 70px;
+  align-items: start;
+}
+
+.copy p {
+  font-size: 15.5px;
+  line-height: 1.75;
+  color: #3a3a36;
+  margin: 26px 0 46px;
+  max-width: 440px;
+}
+
+.big {
+  font-family: var(--font-syne), sans-serif;
+  font-weight: 800;
+  font-size: clamp(34px, 4.4vw, 58px);
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  gap: 38px;
+}
+
+.stat b {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 34px;
+  font-weight: 800;
+  display: block;
+}
+
+.accent {
+  color: var(--green);
+}
+
+.stat span {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: #6b6b66;
+  line-height: 1.5;
+  display: block;
+  margin-top: 6px;
+  text-transform: uppercase;
+}
+
+.visual {
+  position: relative;
+}
+
+.photo {
+  aspect-ratio: 4 / 4.6;
+  overflow: hidden;
+  position: relative;
+}
+
+.photoInner {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
+.img {
+  object-fit: cover;
+  object-position: center 30%;
+}
+
+.brandMark {
+  position: absolute;
+  left: -18px;
+  bottom: 28px;
+  width: 72px;
+  mix-blend-mode: multiply;
+  opacity: 0.92;
+  z-index: 2;
+}
+
+.greenBlock {
+  position: absolute;
+  right: -28px;
+  bottom: -28px;
+  width: 64px;
+  height: 120px;
+  background: var(--green);
+  z-index: -1;
+}
+
+.dotGrid {
+  position: absolute;
+  top: -24px;
+  right: -24px;
+  width: 64px;
+  height: 64px;
+  background-image: radial-gradient(rgba(5, 5, 5, 0.35) 1.5px, transparent 1.5px);
+  background-size: 10px 10px;
+}
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, auto);
+    row-gap: 26px;
+  }
+}
+
+@media (max-width: 768px) {
+  .about {
+    padding: 80px 0;
+  }
+
+  .greenBlock {
+    right: 0;
+    bottom: -16px;
+  }
+}

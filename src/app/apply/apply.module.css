@@ -1,0 +1,117 @@
+.page {
+  min-height: 100svh;
+  background: var(--black);
+  color: var(--off-white);
+  padding: 0 0 80px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 26px 48px;
+  border-bottom: 1px solid var(--border-dark);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-syne), sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.sub {
+  display: block;
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: var(--gray);
+  margin-top: 2px;
+}
+
+.back {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--green);
+}
+
+.wrap {
+  width: min(720px, calc(100% - 48px));
+  margin: 80px auto 0;
+}
+
+.label {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  color: var(--green);
+  margin-bottom: 22px;
+}
+
+.title {
+  font-family: var(--font-syne), sans-serif;
+  font-weight: 800;
+  font-size: clamp(42px, 8vw, 72px);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.accent {
+  color: var(--green);
+}
+
+.lead {
+  margin: 28px 0 48px;
+  color: var(--gray);
+  line-height: 1.7;
+  max-width: 520px;
+  font-size: 15px;
+}
+
+.panel {
+  border: 1px solid var(--border-dark);
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  padding: 20px 22px;
+  border-bottom: 1px solid var(--border-dark);
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.muted {
+  color: var(--gray);
+  text-align: right;
+}
+
+.note {
+  margin-top: 28px;
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: #6b6b66;
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 20px 24px;
+  }
+
+  .wrap {
+    margin-top: 48px;
+  }
+}

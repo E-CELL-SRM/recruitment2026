@@ -1,0 +1,153 @@
+.domains {
+  background: var(--black);
+  padding: 130px 0;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 40px;
+  margin-bottom: 48px;
+  flex-wrap: wrap;
+}
+
+.big {
+  font-family: var(--font-syne), sans-serif;
+  font-weight: 800;
+  font-size: clamp(34px, 4.4vw, 58px);
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.accent {
+  color: var(--green);
+}
+
+.note {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--gray);
+  max-width: 300px;
+}
+
+.line {
+  height: 1px;
+  background: var(--green);
+  margin-bottom: 8px;
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--border-dark);
+}
+
+.item {
+  display: grid;
+  grid-template-columns: 28px 48px 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 18px;
+  row-gap: 0;
+  align-items: baseline;
+  width: 100%;
+  text-align: left;
+  padding: 22px 8px;
+  border-bottom: 1px solid var(--border-dark);
+  position: relative;
+  transition:
+    padding 0.45s var(--ease),
+    background 0.35s var(--ease);
+  overflow: hidden;
+}
+
+.item:hover,
+.active {
+  background: #0a0a0a;
+  padding-top: 34px;
+  padding-bottom: 34px;
+}
+
+.marker {
+  grid-row: 1 / 3;
+  width: 3px;
+  height: 0;
+  background: var(--green);
+  align-self: stretch;
+  transition: height 0.4s var(--ease);
+  margin-top: 8px;
+}
+
+.active .marker,
+.item:hover .marker {
+  height: 100%;
+}
+
+.index {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 11px;
+  color: var(--gray);
+  letter-spacing: 0.08em;
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.title {
+  font-family: var(--font-syne), sans-serif;
+  font-size: clamp(28px, 4.5vw, 56px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  text-transform: uppercase;
+  grid-column: 3;
+  grid-row: 1;
+  transition: color 0.3s, letter-spacing 0.35s var(--ease);
+}
+
+.active .title,
+.item:hover .title {
+  color: var(--green);
+  letter-spacing: 0.01em;
+}
+
+.body {
+  grid-column: 3;
+  grid-row: 2;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--gray);
+  max-width: 480px;
+  margin-top: 0;
+  transition:
+    max-height 0.45s var(--ease),
+    opacity 0.35s var(--ease),
+    margin-top 0.35s var(--ease);
+}
+
+.active .body,
+.item:hover .body {
+  max-height: 120px;
+  opacity: 1;
+  margin-top: 14px;
+}
+
+@media (max-width: 768px) {
+  .domains {
+    padding: 80px 0;
+  }
+
+  .item {
+    grid-template-columns: 18px 36px 1fr;
+    padding: 18px 4px;
+  }
+
+  .title {
+    font-size: clamp(26px, 9vw, 40px);
+  }
+}

@@ -1,0 +1,41 @@
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border: 1px solid #f2f0eb;
+  background: transparent;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: difference;
+  will-change: transform;
+}
+
+.cursor[data-mode="interactive"] {
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  background: #00c853;
+  border-color: #00c853;
+}
+
+.label {
+  position: fixed;
+  top: 0;
+  left: 0;
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: #00c853;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+.label[data-active="true"] {
+  opacity: 1;
+}
