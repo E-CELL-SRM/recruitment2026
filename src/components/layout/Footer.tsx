@@ -46,16 +46,38 @@ export default function Footer() {
             <div className={styles.col}>
               <h5>Connect</h5>
               <div className={styles.socials}>
-                <a href="#" aria-label="Instagram" data-cursor="IG">
+                <a
+                  href="https://www.instagram.com/ecell_srmist/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Instagram"
+                  data-cursor="IG"
+                >
                   <IgIcon />
                 </a>
-                <a href="#" aria-label="LinkedIn" data-cursor="IN">
+                <a
+                  href="https://www.linkedin.com/company/e-cell-srmist/posts/?feedView=all"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="LinkedIn"
+                  data-cursor="IN"
+                >
                   <LiIcon />
                 </a>
-                <a href="#" aria-label="YouTube" data-cursor="YT">
+                <a
+                  href="https://www.youtube.com/channel/UC_2hajYP9HYk_t5D4J6cVBw"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="YouTube"
+                  data-cursor="YT"
+                >
                   <YtIcon />
                 </a>
-                <a href="mailto:ecell@srmist.edu.in" aria-label="Email" data-cursor="MAIL">
+                <a
+                  href="mailto:entrepreneurshipcell.ctech@srmist.edu.in"
+                  aria-label="Email"
+                  data-cursor="MAIL"
+                >
                   <MailIcon />
                 </a>
               </div>
@@ -64,7 +86,10 @@ export default function Footer() {
         </div>
         <div className={styles.bottom}>
           <span>© 2026 E-CELL SRMIST. ALL RIGHTS RESERVED.</span>
-          <span>DESIGNED &amp; BUILT BY LAKSHIT RAJ and ARYAN IYENGAR | TECHNICAL HEADS, E-CELL SRMIST </span>
+          <span>
+            DESIGNED &amp; BUILT BY LAKSHIT RAJ and ARYAN IYENGAR | TECHNICAL
+            HEAD, E-CELL SRMIST
+          </span>
         </div>
       </div>
     </footer>
