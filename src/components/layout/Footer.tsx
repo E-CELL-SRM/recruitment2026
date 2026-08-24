@@ -64,7 +64,7 @@ export default function Footer() {
         </div>
         <div className={styles.bottom}>
           <span>© 2026 E-CELL SRMIST. ALL RIGHTS RESERVED.</span>
-          <span>DESIGNED &amp; BUILT FOR RECRUITMENT 2026</span>
+          <span>DESIGNED &amp; BUILT BY LAKSHIT RAJ and ARYAN IYENGAR | TECHNICAL HEADS, E-CELL SRMIST </span>
         </div>
       </div>
     </footer>
