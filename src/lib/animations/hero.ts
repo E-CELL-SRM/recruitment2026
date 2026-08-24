@@ -46,8 +46,8 @@ export function playHeroIntro(t: HeroTimelineTargets, reduced: boolean) {
     opacity: 0,
     y: 18,
   });
-  gsap.set(t.line1, { clipPath: "inset(100% 0 0 0)", y: 28 });
-  gsap.set(t.line2, { clipPath: "inset(100% 0 0 0)", y: 36 });
+  gsap.set(t.line1, { clipPath: "inset(100% -10% -10% -10%)", y: 28 });
+  gsap.set(t.line2, { clipPath: "inset(100% -10% -10% -10%)", y: 36 });
   if (t.nav) gsap.set(t.nav, { opacity: 0, y: -12 });
 
   tl.to(t.grid, { opacity: 1, duration: 0.28 }, 0)
@@ -62,7 +62,7 @@ export function playHeroIntro(t: HeroTimelineTargets, reduced: boolean) {
     .to(
       t.line1,
       {
-        clipPath: "inset(0% 0 0 0)",
+        clipPath: "inset(-10% -10% -10% -10%)",
         y: 0,
         duration: 0.45,
         ease: "power4.out",
@@ -72,7 +72,7 @@ export function playHeroIntro(t: HeroTimelineTargets, reduced: boolean) {
     .to(
       t.line2,
       {
-        clipPath: "inset(0% 0 0 0)",
+        clipPath: "inset(-10% -10% -10% -10%)",
         y: 0,
         duration: 0.5,
         ease: "back.out(1.4)",

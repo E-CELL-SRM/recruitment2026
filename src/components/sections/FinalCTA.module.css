@@ -1,68 +1,121 @@
+/* ============================================================
+   FINAL CTA SECTION — Full screen, large photo & big centered CTA
+   ============================================================ */
+
 .cta {
   background: var(--black);
-  padding: 150px 0;
   position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
   border-top: 1px solid var(--border-dark);
+  padding: 120px 24px 100px;
+  box-sizing: border-box;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
+/* Background photo stretched to whole window */
+.bgWrap {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  will-change: transform;
+}
+
+.bgImg {
+  object-fit: cover;
+  object-position: center center;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Subtle cinematic scrim overlay to make the photo pop while keeping text crisp */
+.scrim {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at center,
+    rgba(5, 5, 5, 0.52) 0%,
+    rgba(5, 5, 5, 0.72) 55%,
+    rgba(5, 5, 5, 0.92) 100%
+  );
+  pointer-events: none;
+}
+
+/* Centered layout wrapper */
+.centerWrap {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  text-align: center;
+  width: 100%;
 }
 
-.copy p {
-  font-size: 15.5px;
-  color: var(--gray);
-  max-width: 340px;
-  margin: 24px 0 42px;
-  line-height: 1.7;
+.labelWrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
 }
 
 .big {
   font-family: var(--font-syne), sans-serif;
   font-weight: 800;
-  font-size: clamp(48px, 8vw, 96px);
-  line-height: 0.95;
-  letter-spacing: -0.02em;
+  font-size: clamp(56px, 12vw, 144px);
+  line-height: 0.92;
+  letter-spacing: -0.03em;
   text-transform: uppercase;
+  color: var(--off-white);
+  text-align: center;
 }
 
 .accent {
   color: var(--green);
 }
 
-.visual {
-  aspect-ratio: 16 / 13;
-  overflow: hidden;
-  position: relative;
+.sub {
+  font-size: clamp(15px, 1.8vw, 20px);
+  color: rgba(242, 240, 235, 0.88);
+  max-width: 520px;
+  margin: 24px auto 40px;
+  line-height: 1.6;
+  text-align: center;
 }
 
-.imgWrap {
-  position: absolute;
-  inset: 0;
-  will-change: transform;
+.action {
+  display: flex;
+  justify-content: center;
 }
 
-.img {
-  object-fit: cover;
-  object-position: center 30%;
-}
-
-@media (max-width: 1024px) {
-  .grid {
-    grid-template-columns: 1fr;
-  }
-}
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
 
 @media (max-width: 768px) {
   .cta {
-    padding: 80px 0;
+    min-height: 80svh;
+    padding: 90px 20px 70px;
   }
 
   .big {
-    font-size: clamp(42px, 14vw, 64px);
+    font-size: clamp(42px, 13vw, 76px);
+  }
+
+  .sub {
+    font-size: 14px;
+    margin: 18px auto 32px;
   }
 }

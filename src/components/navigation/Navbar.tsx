@@ -45,11 +45,19 @@ export default function Navbar() {
           className={styles.logoMark}
           priority
         />
-        <span>
+        <span className={styles.logoText}>
           E-CELL SRMIST
           <span className={styles.logoSub}>RECRUITMENT 2026</span>
         </span>
       </Link>
+
+      <button
+        type="button"
+        className={`${styles.backdrop} ${open ? styles.backdropVisible : ""}`}
+        aria-label="Close menu"
+        tabIndex={open ? 0 : -1}
+        onClick={() => setOpen(false)}
+      />
 
       <ul className={`${styles.links} ${open ? styles.open : ""}`} id="navLinks">
         {links.map((l) => (

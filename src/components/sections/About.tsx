@@ -58,6 +58,16 @@ export default function About() {
               </div>
             ))}
           </div>
+
+          {/* Placed cleanly in the bottom-left white space */}
+          <div className={styles.brandMark}>
+            <Image
+              src="/assets/logoblack.png"
+              alt="E-Cell SRMIST logo"
+              width={76}
+              height={95}
+            />
+          </div>
         </div>
 
         <div className={styles.visual}>
@@ -72,15 +82,6 @@ export default function About() {
                 className={styles.img}
               />
             </div>
-          </div>
-          <div className={styles.brandMark}>
-            <Image
-              src="/assets/logoblack.png"
-              alt=""
-              width={72}
-              height={90}
-              aria-hidden
-            />
           </div>
           <div className={styles.greenBlock} aria-hidden />
         </div>

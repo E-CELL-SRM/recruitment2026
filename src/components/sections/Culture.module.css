@@ -1,3 +1,7 @@
+/* ============================================================
+   CULTURE SECTION — fully responsive
+   ============================================================ */
+
 .culture {
   background: var(--off-white);
   color: var(--black);
@@ -12,7 +16,7 @@
 .big {
   font-family: var(--font-syne), sans-serif;
   font-weight: 800;
-  font-size: clamp(34px, 4.4vw, 58px);
+  font-size: clamp(28px, 4.4vw, 58px);
   line-height: 1.02;
   letter-spacing: -0.01em;
   text-transform: uppercase;
@@ -23,6 +27,7 @@
   color: var(--green);
 }
 
+/* ---------- Photo collage ---------- */
 .collage {
   display: grid;
   grid-template-columns: 1.35fr 1fr;
@@ -67,6 +72,10 @@
   transform: scale(1.03);
 }
 
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
 @media (max-width: 1024px) {
   .collage {
     grid-template-columns: 1fr 1fr;
@@ -83,20 +92,55 @@
     padding: 80px 0;
   }
 
+  .top {
+    max-width: none;
+    margin-bottom: 40px;
+  }
+
   .collage {
     grid-template-columns: 1fr;
+    gap: 10px;
+    min-height: auto;
   }
 
   .col {
+    display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: none;
+    gap: 10px;
+    min-height: auto;
+  }
+
+  .tall {
+    min-height: 0;
   }
 
   .tall,
   .wide,
   .sq {
-    min-height: 0;
     aspect-ratio: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .culture {
+    padding: 64px 0;
+  }
+
+  .big {
+    font-size: clamp(24px, 7.5vw, 40px);
+  }
+
+  .top {
+    margin-bottom: 32px;
+  }
+
+  .collage {
+    gap: 8px;
+  }
+
+  .col {
+    gap: 8px;
   }
 }
 

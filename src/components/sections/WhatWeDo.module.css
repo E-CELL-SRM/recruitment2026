@@ -1,8 +1,11 @@
+/* ============================================================
+   WHAT WE DO SECTION — fully responsive, no text overlap
+   ============================================================ */
+
 .wwd {
   background: var(--black);
-  padding: 0 0 130px;
+  padding: 130px 0;
   border-top: 1px solid var(--border-dark);
-  padding-top: 110px;
 }
 
 .big {
@@ -19,6 +22,7 @@
   color: var(--green);
 }
 
+/* ---------- Item list ---------- */
 .list {
   display: flex;
   flex-direction: column;
@@ -27,8 +31,8 @@
 
 .row {
   display: grid;
-  grid-template-columns: 64px minmax(140px, 280px) 1fr;
-  gap: 24px;
+  grid-template-columns: 56px 360px 1fr;
+  gap: 32px;
   align-items: baseline;
   width: 100%;
   text-align: left;
@@ -51,11 +55,12 @@
 
 .title {
   font-family: var(--font-syne), sans-serif;
-  font-size: clamp(22px, 3vw, 36px);
+  font-size: clamp(22px, 2.5vw, 34px);
   font-weight: 800;
   letter-spacing: 0.02em;
   text-transform: uppercase;
   transition: color 0.3s;
+  white-space: nowrap;
 }
 
 .row:hover .title,
@@ -67,16 +72,29 @@
   font-size: 14px;
   color: var(--gray);
   line-height: 1.6;
-  max-width: 360px;
-  opacity: 0.55;
-  transform: translateX(-6px);
-  transition: opacity 0.35s, transform 0.35s var(--ease);
+  max-width: 440px;
+  opacity: 0.65;
+  transition: opacity 0.35s;
 }
 
 .row:hover .body,
 .active .body {
   opacity: 1;
-  transform: translateX(0);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 1024px) {
+  .row {
+    grid-template-columns: 44px 260px 1fr;
+    gap: 20px;
+  }
+
+  .title {
+    font-size: 22px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -84,19 +102,65 @@
     padding: 80px 0;
   }
 
+  .big {
+    font-size: clamp(26px, 7vw, 44px);
+    margin-bottom: 40px;
+  }
+
   .row {
-    grid-template-columns: 40px 1fr;
+    display: grid;
+    grid-template-columns: 36px 1fr;
     grid-template-rows: auto auto;
+    gap: 8px 16px;
+    padding: 20px 4px;
+  }
+
+  .row:hover,
+  .active {
+    padding-left: 8px;
+  }
+
+  .num {
+    grid-column: 1;
+    grid-row: 1;
   }
 
   .title {
     grid-column: 2;
+    grid-row: 1;
+    font-size: clamp(20px, 5.5vw, 28px);
+    white-space: normal;
   }
 
   .body {
     grid-column: 2;
+    grid-row: 2;
     max-width: none;
     opacity: 1;
-    transform: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .wwd {
+    padding: 64px 0;
+  }
+
+  .big {
+    font-size: clamp(24px, 6.5vw, 36px);
+    margin-bottom: 32px;
+  }
+
+  .row {
+    grid-template-columns: 28px 1fr;
+    gap: 6px 12px;
+    padding: 16px 2px;
+  }
+
+  .title {
+    font-size: clamp(18px, 5vw, 24px);
+  }
+
+  .body {
+    font-size: 13px;
   }
 }

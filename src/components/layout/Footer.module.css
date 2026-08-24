@@ -1,7 +1,11 @@
+/* ============================================================
+   FOOTER — compact, sleek & clean
+   ============================================================ */
+
 .footer {
   background: var(--black);
   border-top: 1px solid var(--border-dark);
-  padding: 56px 0 34px;
+  padding: 38px 0 20px;
 }
 
 .top {
@@ -9,8 +13,14 @@
   justify-content: space-between;
   align-items: flex-start;
   flex-wrap: wrap;
-  gap: 50px;
-  margin-bottom: 56px;
+  gap: 32px;
+  margin-bottom: 28px;
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .logo {
@@ -19,8 +29,7 @@
   gap: 10px;
   font-family: var(--font-syne), sans-serif;
   font-weight: 700;
-  font-size: 15px;
-  margin-bottom: 14px;
+  font-size: 14px;
 }
 
 .sub {
@@ -30,31 +39,31 @@
 
 .tag {
   font-family: var(--font-jetbrains), monospace;
-  font-size: 11px;
-  letter-spacing: 0.16em;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
   color: var(--green);
 }
 
 .cols {
   display: flex;
-  gap: 80px;
+  gap: 60px;
   flex-wrap: wrap;
 }
 
 .col h5 {
   font-family: var(--font-jetbrains), monospace;
-  font-size: 11px;
+  font-size: 10.5px;
   letter-spacing: 0.1em;
   color: var(--gray);
-  margin-bottom: 16px;
+  margin-bottom: 10px;
   text-transform: uppercase;
 }
 
 .col a {
   display: block;
-  font-size: 13.5px;
+  font-size: 13px;
   color: #d8d8d3;
-  margin-bottom: 10px;
+  margin-bottom: 6px;
   transition: color 0.3s;
 }
 
@@ -64,12 +73,13 @@
 
 .socials {
   display: flex;
-  gap: 12px;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .socials a {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border: 1px solid var(--border-dark);
   display: flex;
   align-items: center;
@@ -78,6 +88,7 @@
     border-color 0.3s,
     background 0.3s;
   border-radius: 0;
+  flex-shrink: 0;
 }
 
 .socials a:hover {
@@ -88,17 +99,46 @@
 .bottom {
   display: flex;
   justify-content: space-between;
-  padding-top: 26px;
+  padding-top: 18px;
   border-top: 1px solid var(--border-dark);
   font-family: var(--font-jetbrains), monospace;
-  font-size: 11px;
+  font-size: 10px;
   color: #6b6b66;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
 }
 
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
 @media (max-width: 768px) {
+  .footer {
+    padding: 32px 0 18px;
+  }
+
+  .top {
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+
   .cols {
-    gap: 40px;
+    gap: 36px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer {
+    padding: 28px 0 16px;
+  }
+
+  .top {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .bottom {
+    flex-direction: column;
+    gap: 6px;
   }
 }
