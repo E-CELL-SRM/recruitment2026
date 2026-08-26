@@ -1,6 +1,8 @@
 "use client";
 
 import MagneticButton from "@/components/interactions/MagneticButton";
+import { useApplyModal } from "@/context/ApplyModalContext";
+import { scrollToTarget } from "@/lib/animations/scroll";
 
 type Props = {
   eyebrowRef: React.RefObject<HTMLDivElement | null>;
@@ -21,6 +23,8 @@ export default function HeroTypography({
   subRef,
   actionsRef,
 }: Props) {
+  const { openApplyModal } = useApplyModal();
+
   return (
     <div className="hero-content">
       <div className="hero-eyebrow" ref={eyebrowRef}>
@@ -44,13 +48,23 @@ export default function HeroTypography({
         thinkers, builders and doers.
       </p>
       <div className="hero-actions" ref={actionsRef}>
-        <MagneticButton href="/apply" className="btn-primary" cursorLabel="APPLY">
+        <MagneticButton
+          onClick={() => openApplyModal("technical")}
+          className="btn-primary"
+          cursorLabel="APPLY"
+        >
           APPLY NOW <span className="btn-arrow">→</span>
         </MagneticButton>
-        <a href="#domains" className="btn-ghost" data-cursor="EXPLORE">
+        <button
+          type="button"
+          onClick={() => scrollToTarget("#domains", -40)}
+          className="btn-ghost"
+          data-cursor="EXPLORE"
+        >
           EXPLORE DOMAINS ↓
-        </a>
+        </button>
       </div>
     </div>
   );
 }
+

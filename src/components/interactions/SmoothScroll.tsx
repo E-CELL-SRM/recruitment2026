@@ -6,6 +6,12 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { registerScrollPlugins, prefersReducedMotion } from "@/lib/animations/scroll";
 
+declare global {
+  interface Window {
+    __lenis?: Lenis;
+  }
+}
+
 export default function SmoothScroll({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     registerScrollPlugins();
@@ -20,6 +26,8 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
       touchMultiplier: 1.4,
     });
 
+    window.__lenis = lenis;
+
     lenis.on("scroll", ScrollTrigger.update);
 
     const ticker = (time: number) => {
@@ -33,6 +41,7 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     return () => {
       gsap.ticker.remove(ticker);
       lenis.destroy();
+      delete window.__lenis;
       document.documentElement.classList.remove("lenis");
     };
   }, []);

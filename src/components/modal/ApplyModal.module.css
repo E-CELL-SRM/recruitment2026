@@ -1,0 +1,1032 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(12px) saturate(160%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  opacity: 0;
+  animation: fadeIn 0.3s cubic-bezier(0.16, 0.84, 0.44, 1) forwards;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal {
+  background: #090909;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  width: 100%;
+  max-width: 680px;
+  max-height: calc(100svh - 32px);
+  display: flex;
+  flex-direction: column;
+  color: var(--off-white);
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.9), 0 0 40px rgba(0, 200, 83, 0.08);
+  position: relative;
+  overflow: hidden;
+  transform: translateY(16px) scale(0.98);
+  animation: modalEnter 0.35s cubic-bezier(0.16, 0.84, 0.44, 1) forwards;
+}
+
+.formWrap {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+@keyframes modalEnter {
+  to {
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Green top accent line */
+.modal::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #00c853, transparent 80%);
+  z-index: 10;
+}
+
+/* Modal Header */
+.header {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  background: #090909;
+  z-index: 5;
+}
+
+.headerTitle {
+  font-family: var(--font-syne), sans-serif;
+  font-size: clamp(18px, 2.8vw, 24px);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--off-white);
+  line-height: 1.15;
+}
+
+.headerAccent {
+  color: var(--green);
+}
+
+.headerSub {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--gray);
+  margin-top: 4px;
+  text-transform: uppercase;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.closeBtn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.closeBtn:hover {
+  color: var(--off-white);
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Modal Body */
+.body {
+  padding: 24px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.domainHintBox {
+  background: rgba(0, 200, 83, 0.04);
+  border: 1px solid rgba(0, 200, 83, 0.2);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.domainHintHeader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--green);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.domainHintText {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #c4c4be;
+}
+
+.helperText {
+  font-size: 11px;
+  color: #888880;
+  line-height: 1.4;
+  margin-top: -2px;
+}
+
+.body::-webkit-scrollbar {
+  width: 5px;
+}
+.body::-webkit-scrollbar-track {
+  background: #090909;
+}
+.body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+}
+.body::-webkit-scrollbar-thumb:hover {
+  background: var(--green);
+}
+
+/* Form Sections */
+.formSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.googleAuthCard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-dark);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.googleAuthLogged {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.googleAvatarImg {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1.5px solid var(--green);
+  flex-shrink: 0;
+  object-fit: cover;
+}
+
+.googleAvatarFallback {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(200, 255, 0, 0.12);
+  color: var(--green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  border: 1.5px solid var(--green);
+  flex-shrink: 0;
+}
+
+.googleAuthInfo {
+  min-width: 0;
+}
+
+.googleAuthName {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--off-white);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.googleAuthEmail {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 11px;
+  color: var(--green);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.googleVerifiedBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 9.5px;
+  color: var(--green);
+  background: rgba(200, 255, 0, 0.08);
+  border: 1px solid rgba(200, 255, 0, 0.2);
+  padding: 3px 8px;
+  flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.googlePromptContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.googlePromptTitle {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--off-white);
+}
+
+.googlePromptSub {
+  font-size: 11px;
+  color: var(--gray);
+}
+
+.modalGoogleBtn {
+  background: #ffffff;
+  color: #111111;
+  border: none;
+  font-family: var(--font-jetbrains), monospace;
+  font-weight: 700;
+  font-size: 11px;
+  padding: 8px 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.modalGoogleBtn:hover {
+  background: #f0f0f0;
+  transform: translateY(-1px);
+}
+
+.authBtnStack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.manualToggleBtn {
+  background: transparent;
+  border: none;
+  color: var(--gray);
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 10.5px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  padding: 2px;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+.manualToggleBtn:hover {
+  color: var(--off-white);
+}
+
+.manualAuthForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.manualAuthFields {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.manualAuthInput {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-dark);
+  color: var(--off-white);
+  padding: 10px 12px;
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 12.5px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.manualAuthInput:focus {
+  border-color: var(--green);
+}
+
+.manualAuthInput::placeholder {
+  color: #555555;
+}
+
+.sectionLabel {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--green);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sectionLabel::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: #c4c4be;
+  text-transform: uppercase;
+  display: flex;
+  justify-content: space-between;
+}
+
+.required {
+  color: var(--green);
+  margin-left: 2px;
+}
+
+.optional {
+  color: #71716b;
+  font-size: 10px;
+  text-transform: lowercase;
+}
+
+.input,
+.select,
+.textarea {
+  width: 100%;
+  background: #111111;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--off-white);
+  padding: 12px 14px;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-size: 13.5px;
+  border-radius: 0;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  border-color: var(--green);
+  background: #141414;
+  box-shadow: 0 0 0 1px var(--green);
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: #555550;
+  font-size: 13px;
+}
+
+.inputMono {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+
+.errorText {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 11px;
+  color: #ff5252;
+  margin-top: 2px;
+}
+
+/* Domain Selection Chips */
+.domainGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.domainCard {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #111111;
+  padding: 12px 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.25s var(--ease);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: relative;
+}
+
+.domainCard:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  background: #141414;
+}
+
+.domainCardSelected {
+  border-color: var(--green) !important;
+  background: rgba(0, 200, 83, 0.08) !important;
+}
+
+.domainCardSelected::after {
+  content: "✓";
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-size: 12px;
+  font-family: var(--font-jetbrains), monospace;
+  color: var(--green);
+  font-weight: 700;
+}
+
+.domainCardTitle {
+  font-family: var(--font-syne), sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  color: var(--off-white);
+  text-transform: uppercase;
+}
+
+.domainCardSelected .domainCardTitle {
+  color: var(--green);
+}
+
+.domainCardDesc {
+  font-size: 11px;
+  color: var(--gray);
+  line-height: 1.4;
+}
+
+/* Sub-track options */
+.subTrackWrap {
+  margin-top: 8px;
+  padding: 12px 14px;
+  background: #141414;
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.subTrackLabel {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  color: var(--gray);
+  text-transform: uppercase;
+}
+
+.subTrackChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.subChip {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 11px;
+  padding: 5px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #0a0a0a;
+  color: #bfbfb8;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.subChip:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: var(--off-white);
+}
+
+.subChipActive {
+  border-color: var(--green) !important;
+  color: var(--black) !important;
+  background: var(--green) !important;
+  font-weight: 600;
+}
+
+/* Footer / Submit */
+.footer {
+  padding: 16px 24px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: #090909;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.securityNote {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 10.5px;
+  color: #71716b;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.submitBtn {
+  background: var(--green);
+  color: var(--black);
+  padding: 13px 26px;
+  font-family: var(--font-jetbrains), monospace;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.25s var(--ease);
+}
+
+.submitBtn:hover:not(:disabled) {
+  box-shadow: 0 8px 24px rgba(0, 200, 83, 0.35);
+  gap: 12px;
+}
+
+.submitBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   SUCCESS VIEW
+   ============================================================ */
+.successWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 24px 12px;
+  gap: 20px;
+}
+
+.successIconWrap {
+  width: 64px;
+  height: 64px;
+  border: 1px solid var(--green);
+  background: rgba(0, 200, 83, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--green);
+  position: relative;
+}
+
+.successTitle {
+  font-family: var(--font-syne), sans-serif;
+  font-size: clamp(24px, 4vw, 32px);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: var(--off-white);
+  line-height: 1.1;
+}
+
+.successSub {
+  font-size: 14px;
+  color: var(--gray);
+  max-width: 460px;
+  line-height: 1.6;
+}
+
+/* Ticket / Slip card */
+.ticketCard {
+  width: 100%;
+  max-width: 520px;
+  background: #111111;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 20px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+}
+
+.ticketTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
+  padding-bottom: 14px;
+}
+
+.ticketIdLabel {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--gray);
+  text-transform: uppercase;
+}
+
+.ticketIdVal {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--green);
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.copyBtn {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 10px;
+  padding: 4px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #bfbfb8;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.copyBtn:hover {
+  border-color: var(--green);
+  color: var(--green);
+}
+
+.ticketBadge {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  background: rgba(0, 200, 83, 0.12);
+  border: 1px solid var(--green);
+  color: var(--green);
+  padding: 4px 8px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.ticketDetails {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px 16px;
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 11px;
+}
+
+.ticketRow {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ticketKey {
+  color: #71716b;
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ticketVal {
+  color: var(--off-white);
+  font-size: 12px;
+  word-break: break-all;
+}
+
+/* Timeline / Next Steps */
+.timeline {
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+}
+
+.timelineHeading {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--gray);
+  text-transform: uppercase;
+}
+
+.stepsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.stepBox {
+  background: #111111;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stepNum {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 10px;
+  color: var(--green);
+  font-weight: 700;
+}
+
+.stepName {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--off-white);
+}
+
+.stepDesc {
+  font-size: 10px;
+  color: #7a7a75;
+  line-height: 1.4;
+}
+
+.successActions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.resetBtn {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: #a3a39e;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.resetBtn:hover {
+  color: var(--green);
+  border-color: var(--green);
+  background: rgba(0, 200, 83, 0.06);
+}
+
+/* ============================================================
+   RESPONSIVE BREAKPOINTS
+   ============================================================ */
+
+@media (max-width: 640px) {
+  .backdrop {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .modal {
+    max-height: 94dvh;
+    max-height: 94svh;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+  }
+
+  .header {
+    padding: 16px 18px 12px;
+  }
+
+  .headerTitle {
+    font-size: 18px;
+  }
+
+  .headerSub {
+    font-size: 9.5px;
+  }
+
+  .body {
+    padding: 16px 18px;
+    gap: 16px;
+  }
+
+  .grid2 {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .domainGrid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .domainCard {
+    padding: 10px 12px;
+  }
+
+  .input,
+  .select,
+  .textarea {
+    font-size: 14px;
+    padding: 11px 12px;
+  }
+
+  .subTrackChips {
+    gap: 5px;
+  }
+
+  .subChip {
+    font-size: 10px;
+    padding: 5px 8px;
+  }
+
+  .stepsGrid {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .footer {
+    padding: 14px 18px 18px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .submitBtn {
+    width: 100%;
+    justify-content: center;
+    padding: 14px;
+  }
+
+  .ticketDetails {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .successActions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .successActions button,
+  .resetBtn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 380px) {
+  .header {
+    padding: 14px 14px 10px;
+  }
+
+  .headerTitle {
+    font-size: 16px;
+  }
+
+  .body {
+    padding: 14px;
+    gap: 14px;
+  }
+
+  .googleAuthCard {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .googleVerifiedBadge {
+    align-self: flex-start;
+  }
+
+  .googleAuthName,
+  .googleAuthEmail {
+    max-width: 100%;
+  }
+
+  .modalGoogleBtn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .authBtnStack {
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .manualToggleBtn {
+    text-align: center;
+  }
+
+  .sectionLabel {
+    font-size: 10px;
+  }
+
+  .domainCard {
+    padding: 10px;
+  }
+
+  .domainCardTitle {
+    font-size: 13px;
+  }
+
+  .domainCardDesc {
+    font-size: 10px;
+  }
+
+  .subChip {
+    font-size: 9.5px;
+    padding: 4px 7px;
+  }
+
+  .ticketCard {
+    padding: 14px;
+  }
+
+  .ticketIdVal {
+    font-size: 13px;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .successTitle {
+    font-size: 22px;
+  }
+
+  .successSub {
+    font-size: 13px;
+  }
+}

@@ -6,13 +6,14 @@
   background: var(--black);
   position: relative;
   min-height: 100svh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   border-top: 1px solid var(--border-dark);
-  padding: 120px 24px 100px;
+  padding: clamp(80px, 12vh, 120px) clamp(16px, 4vw, 32px) clamp(60px, 10vh, 100px);
   box-sizing: border-box;
 }
 
@@ -39,8 +40,8 @@
   background: radial-gradient(
     circle at center,
     rgba(5, 5, 5, 0.52) 0%,
-    rgba(5, 5, 5, 0.72) 55%,
-    rgba(5, 5, 5, 0.92) 100%
+    rgba(5, 5, 5, 0.76) 55%,
+    rgba(5, 5, 5, 0.94) 100%
   );
   pointer-events: none;
 }
@@ -74,7 +75,7 @@
 .big {
   font-family: var(--font-syne), sans-serif;
   font-weight: 800;
-  font-size: clamp(56px, 12vw, 144px);
+  font-size: clamp(38px, 10vw, 130px);
   line-height: 0.92;
   letter-spacing: -0.03em;
   text-transform: uppercase;
@@ -87,10 +88,10 @@
 }
 
 .sub {
-  font-size: clamp(15px, 1.8vw, 20px);
+  font-size: clamp(13.5px, 1.6vw, 18px);
   color: rgba(242, 240, 235, 0.88);
   max-width: 520px;
-  margin: 24px auto 40px;
+  margin: clamp(18px, 2.5vh, 24px) auto clamp(28px, 4vh, 40px);
   line-height: 1.6;
   text-align: center;
 }
@@ -106,16 +107,28 @@
 
 @media (max-width: 768px) {
   .cta {
-    min-height: 80svh;
-    padding: 90px 20px 70px;
+    min-height: 75svh;
+    min-height: 75dvh;
+    padding: 70px 20px 50px;
   }
 
   .big {
-    font-size: clamp(42px, 13vw, 76px);
+    font-size: clamp(36px, 11vw, 68px);
   }
 
   .sub {
-    font-size: 14px;
-    margin: 18px auto 32px;
+    font-size: 13.5px;
+    margin: 14px auto 26px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cta {
+    min-height: 65svh;
+    padding: 60px 16px 40px;
+  }
+
+  .big {
+    font-size: clamp(30px, 10.5vw, 48px);
   }
 }

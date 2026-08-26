@@ -1,0 +1,6 @@
+{
+  "name": "E-Cell SRMIST Recruitment 2026",
+  "description": "Official recruitment website for E-Cell SRMIST with domain showcases, interactive animations, and application portal.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

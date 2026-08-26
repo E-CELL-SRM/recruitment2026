@@ -1,0 +1,60 @@
+rules_version = '2';
+
+// Deploy with: firebase deploy --only firestore:rules
+// (or paste into Firebase Console → Firestore Database → Rules)
+//
+// Data model
+// ----------
+// users/{uid}         — one doc per candidate, doc ID = Firebase Auth uid
+// applications/{id}   — one doc per submitted application, doc ID = tracking ID (e.g. EC26-TECH-1234)
+//
+// Note: this app supports two sign-in paths — real Firebase "Google"
+// auth (request.auth is populated) and a client-side "email only"
+// fallback used when Google sign-in isn't available (request.auth is
+// null, the app just derives a stable uid from the email locally).
+// The rules below keep the same trust level the previous Neon-backed
+// API routes had (field validation, no un-authenticated overwrites of
+// someone else's Google-authenticated profile) while still allowing
+// that fallback path to work.
+
+function isGoogleUser(uid) {
+  return request.auth != null && request.auth.uid == uid;
+}
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /users/{uid} {
+      allow read: if true;
+
+      // A real Firebase-authenticated user may only write their own doc.
+      // The email-only fallback path (no request.auth) may create a fresh
+      // doc or update one it previously created, but can never touch a
+      // doc that belongs to a real Google-authenticated uid.
+      allow create, update: if isGoogleUser(uid) ||
+        (request.auth == null &&
+         (!exists(/databases/$(database)/documents/users/$(uid)) ||
+          get(/databases/$(database)/documents/users/$(uid)).data.authType == "email"));
+
+      allow delete: if false;
+    }
+
+    match /applications/{id} {
+      allow read: if true;
+
+      allow create: if
+        request.resource.data.keys().hasAll([
+          "id", "applicantEmail", "fullName", "regNumber",
+          "domain", "phone", "year", "submittedAt"
+        ]) &&
+        request.resource.data.id == id &&
+        request.resource.data.applicantEmail is string &&
+        request.resource.data.applicantEmail.size() > 3 &&
+        request.resource.data.fullName is string &&
+        request.resource.data.fullName.size() > 0;
+
+      // Applications are immutable once submitted.
+      allow update, delete: if false;
+    }
+  }
+}

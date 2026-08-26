@@ -3,6 +3,11 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useApplyModal } from "@/context/ApplyModalContext";
+import { useAuth } from "@/context/AuthContext";
+import { scrollToTarget } from "@/lib/animations/scroll";
+import { LogIn } from "lucide-react";
 import styles from "./Navbar.module.css";
 
 const links = [
@@ -13,8 +18,16 @@ const links = [
 ];
 
 export default function Navbar() {
+  const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const { openApplyModal } = useApplyModal();
+  const { user, userProfile } = useAuth();
+  const activeCandidate = userProfile || (user ? {
+    displayName: user.displayName,
+    email: user.email,
+    photoURL: user.photoURL,
+  } : null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -29,6 +42,11 @@ export default function Navbar() {
       document.body.style.overflow = "";
     };
   }, [open]);
+
+  const handleJoinClick = () => {
+    setOpen(false);
+    openApplyModal();
+  };
 
   return (
     <nav
@@ -65,21 +83,65 @@ export default function Navbar() {
             <a
               href={l.href}
               data-cursor={l.label}
-              onClick={() => setOpen(false)}
+              onClick={(e) => {
+                e.preventDefault();
+                setOpen(false);
+                scrollToTarget(l.href, -40);
+              }}
             >
               {l.label}
             </a>
           </li>
         ))}
+
         <li>
-          <Link
-            href="/apply"
+          {activeCandidate ? (
+            <button
+              type="button"
+              className={styles.navUserPill}
+              onClick={() => {
+                setOpen(false);
+                router.push("/login");
+              }}
+              title={activeCandidate.email || "Candidate Profile"}
+            >
+              {activeCandidate.photoURL ? (
+                <img
+                  src={activeCandidate.photoURL}
+                  alt={activeCandidate.displayName || "Avatar"}
+                  className={styles.navUserAvatar}
+                />
+              ) : (
+                <span className={styles.navUserAvatarFallback}>
+                  {activeCandidate.displayName ? activeCandidate.displayName.charAt(0).toUpperCase() : "C"}
+                </span>
+              )}
+              <span>{activeCandidate.displayName?.split(" ")[0]?.toUpperCase() || "PORTAL"}</span>
+            </button>
+          ) : (
+            <button
+              type="button"
+              className={styles.navLoginLink}
+              onClick={() => {
+                setOpen(false);
+                router.push("/login");
+              }}
+            >
+              <LogIn size={12} />
+              <span>PORTAL LOGIN</span>
+            </button>
+          )}
+        </li>
+
+        <li>
+          <button
+            type="button"
             className={styles.cta}
             data-cursor="JOIN"
-            onClick={() => setOpen(false)}
+            onClick={handleJoinClick}
           >
             JOIN NOW →
-          </Link>
+          </button>
         </li>
       </ul>
 

@@ -8,15 +8,15 @@
   border: 1px solid #f2f0eb;
   background: transparent;
   pointer-events: none;
-  z-index: 9999;
+  z-index: 99999;
   mix-blend-mode: difference;
   will-change: transform;
 }
 
 .cursor[data-mode="interactive"] {
-  width: 6px;
-  height: 6px;
-  margin: -3px 0 0 -3px;
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
   background: #00c853;
   border-color: #00c853;
 }
@@ -30,7 +30,7 @@
   letter-spacing: 0.14em;
   color: #00c853;
   pointer-events: none;
-  z-index: 9999;
+  z-index: 99999;
   opacity: 0;
   white-space: nowrap;
   will-change: transform;

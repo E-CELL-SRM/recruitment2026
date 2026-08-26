@@ -5,10 +5,12 @@ import Image from "next/image";
 import SectionLabel from "@/components/layout/SectionLabel";
 import MagneticButton from "@/components/interactions/MagneticButton";
 import { sectionEnter } from "@/lib/animations/reveals";
+import { useApplyModal } from "@/context/ApplyModalContext";
 import styles from "./FinalCTA.module.css";
 
 export default function FinalCTA() {
   const contentRef = useRef<HTMLDivElement>(null);
+  const { openApplyModal } = useApplyModal();
 
   useEffect(() => {
     if (contentRef.current) sectionEnter(contentRef.current, { y: 40 });
@@ -43,7 +45,7 @@ export default function FinalCTA() {
           </p>
           <div className={styles.action}>
             <MagneticButton
-              href="/apply"
+              onClick={() => openApplyModal()}
               className="btn-primary"
               cursorLabel="APPLY"
             >
@@ -55,3 +57,4 @@ export default function FinalCTA() {
     </section>
   );
 }
+

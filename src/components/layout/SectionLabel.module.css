@@ -1,13 +1,15 @@
 .label {
   font-family: var(--font-jetbrains), monospace;
-  font-size: 13px;
+  font-size: clamp(10.5px, 1.2vw, 13px);
   letter-spacing: 0.12em;
   color: var(--green);
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 22px;
+  gap: 8px;
+  margin-bottom: clamp(14px, 2vh, 22px);
   text-transform: uppercase;
+  font-weight: 500;
+  flex-wrap: wrap;
 }
 
 .sep {

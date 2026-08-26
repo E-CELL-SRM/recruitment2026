@@ -3,18 +3,19 @@
 import { useEffect, useRef, useState } from "react";
 import SectionLabel from "@/components/layout/SectionLabel";
 import { expandGreenLine, sectionEnter } from "@/lib/animations/reveals";
+import { useApplyModal } from "@/context/ApplyModalContext";
 import styles from "./Domains.module.css";
 
 const domains = [
   {
     id: "technical",
     title: "TECHNICAL",
-    body: "Build products, ship systems, and solve real-world problems with technology.",
+    body: "Build scalable web applications, engineer AI/ML models, architect UI/UX product design systems, and develop embedded hardware.",
   },
   {
     id: "creative",
     title: "CREATIVE",
-    body: "Design, create and communicate ideas that move people and define culture.",
+    body: "Produce bold visual brand identities, high-octane video motion graphics, 3D renders, and persuasive content.",
   },
   {
     id: "corporate",
@@ -23,8 +24,8 @@ const domains = [
   },
   {
     id: "legal",
-    title: "LEGAL",
-    body: "Ensure compliance, manage policies and protect ideas as they scale.",
+    title: "LEGAL & FINANCE",
+    body: "Ensure compliance, manage policies, protect venture IP, and guide financial modeling.",
   },
 ];
 
@@ -33,6 +34,7 @@ export default function Domains() {
   const headRef = useRef<HTMLDivElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const { openApplyModal } = useApplyModal();
 
   useEffect(() => {
     if (headRef.current) sectionEnter(headRef.current);
@@ -65,21 +67,39 @@ export default function Domains() {
           {domains.map((d, i) => {
             const isActive = active === i;
             return (
-              <button
+              <div
                 key={d.id}
-                type="button"
                 className={`${styles.item} ${isActive ? styles.active : ""}`}
                 onMouseEnter={() => setActive(i)}
-                onFocus={() => setActive(i)}
                 onClick={() => setActive(i)}
-                aria-pressed={isActive}
+                aria-expanded={isActive}
                 data-cursor="OPEN"
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") setActive(i);
+                }}
               >
                 <span className={styles.marker} aria-hidden />
                 <span className={styles.index}>0{i + 1}</span>
                 <h3 className={styles.title}>{d.title}</h3>
-                <p className={styles.body}>{d.body}</p>
-              </button>
+                <div className={styles.body}>
+                  <p>{d.body}</p>
+                  {isActive && (
+                    <button
+                      type="button"
+                      className={styles.domainApplyBtn}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openApplyModal(d.id);
+                      }}
+                      data-cursor="APPLY"
+                    >
+                      APPLY FOR {d.title} →
+                    </button>
+                  )}
+                </div>
+              </div>
             );
           })}
         </div>
@@ -87,3 +107,4 @@ export default function Domains() {
     </section>
   );
 }
+

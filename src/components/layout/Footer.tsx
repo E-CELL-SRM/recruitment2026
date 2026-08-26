@@ -1,8 +1,12 @@
+"use client";
+
 import Image from "next/image";
-import Link from "next/link";
+import { useApplyModal } from "@/context/ApplyModalContext";
 import styles from "./Footer.module.css";
 
 export default function Footer() {
+  const { openApplyModal } = useApplyModal();
+
   return (
     <footer className={styles.footer} id="events">
       <div className="wrap">
@@ -39,9 +43,15 @@ export default function Footer() {
               <a href="#events" data-cursor="→">
                 Events
               </a>
-              <Link href="/apply" data-cursor="APPLY">
-                Apply
-              </Link>
+              <button
+                type="button"
+                onClick={() => openApplyModal()}
+                data-cursor="APPLY"
+                className="text-left text-inherit bg-transparent border-none p-0 cursor-pointer hover:text-white transition-colors"
+                style={{ font: "inherit", color: "inherit" }}
+              >
+                Apply Now
+              </button>
             </div>
             <div className={styles.col}>
               <h5>Connect</h5>
@@ -95,6 +105,7 @@ export default function Footer() {
     </footer>
   );
 }
+
 
 function IgIcon() {
   return (

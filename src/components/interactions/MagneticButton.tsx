@@ -4,22 +4,27 @@ import { useRef, type ReactNode, type MouseEvent } from "react";
 import Link from "next/link";
 
 type Props = {
-  href: string;
+  href?: string;
+  onClick?: (e: MouseEvent<HTMLElement>) => void;
   children: ReactNode;
   className?: string;
   cursorLabel?: string;
+  type?: "button" | "submit" | "reset";
 };
 
 export default function MagneticButton({
   href,
+  onClick,
   children,
   className = "",
   cursorLabel = "OPEN",
+  type = "button",
 }: Props) {
-  const ref = useRef<HTMLAnchorElement>(null);
+  const linkRef = useRef<HTMLAnchorElement>(null);
+  const btnRef = useRef<HTMLButtonElement>(null);
 
-  const onMove = (e: MouseEvent<HTMLAnchorElement>) => {
-    const el = ref.current;
+  const onMove = (e: MouseEvent<HTMLElement>) => {
+    const el = linkRef.current || btnRef.current;
     if (!el || window.matchMedia("(pointer: coarse)").matches) return;
     const rect = el.getBoundingClientRect();
     const x = e.clientX - rect.left - rect.width / 2;
@@ -31,20 +36,38 @@ export default function MagneticButton({
   };
 
   const onLeave = () => {
-    if (!ref.current) return;
-    ref.current.style.transform = "translate3d(0,0,0)";
+    const el = linkRef.current || btnRef.current;
+    if (!el) return;
+    el.style.transform = "translate3d(0,0,0)";
   };
 
+  if (href && !onClick) {
+    return (
+      <Link
+        ref={linkRef}
+        href={href}
+        className={`magnetic-btn ${className}`}
+        onMouseMove={onMove}
+        onMouseLeave={onLeave}
+        data-cursor={cursorLabel}
+      >
+        {children}
+      </Link>
+    );
+  }
+
   return (
-    <Link
-      ref={ref}
-      href={href}
+    <button
+      ref={btnRef}
+      type={type}
+      onClick={onClick}
       className={`magnetic-btn ${className}`}
       onMouseMove={onMove}
       onMouseLeave={onLeave}
       data-cursor={cursorLabel}
     >
       {children}
-    </Link>
+    </button>
   );
 }
+

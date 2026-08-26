@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Syne, Inter, JetBrains_Mono } from "next/font/google";
 import Providers from "@/components/providers/Providers";
 import "./globals.css";
@@ -50,6 +50,13 @@ export const metadata: Metadata = {
   icons: {
     icon: "/assets/logowhite.png",
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#050505",
 };
 
 export default function RootLayout({

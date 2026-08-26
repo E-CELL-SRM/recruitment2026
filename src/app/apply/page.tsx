@@ -1,15 +1,15 @@
-import type { Metadata } from "next";
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useApplyModal } from "@/context/ApplyModalContext";
+import { CheckCircle2, ArrowRight } from "lucide-react";
 import styles from "./apply.module.css";
 
-export const metadata: Metadata = {
-  title: "Apply — E-Cell SRMIST Recruitment 2026",
-  description:
-    "Apply to join E-Cell SRMIST. Authentication and application form coming in the next phase.",
-};
 
 export default function ApplyPage() {
+  const { openApplyModal, latestApplication } = useApplyModal();
+
   return (
     <main className={styles.page}>
       <header className={styles.header}>
@@ -26,33 +26,63 @@ export default function ApplyPage() {
           </span>
         </Link>
         <Link href="/" className={styles.back} data-cursor="BACK">
-          ← BACK
+          ← BACK TO HOME
         </Link>
       </header>
 
       <div className={styles.wrap}>
-        <p className={styles.label}>07 / APPLICATION</p>
+        <p className={styles.label}>07 / RECRUITMENT APPLICATION</p>
         <h1 className={styles.title}>
           JOIN THE
           <br />
           <span className={styles.accent}>BUILD.</span>
         </h1>
         <p className={styles.lead}>
-          Frontend shell is live. Google authentication, Demo Mode, domain
-          selection, validation, and MongoDB submission land in the backend
-          phase — this route is reserved and will not be redesigned.
+          Take the first step towards India&apos;s premier student entrepreneurship cell.
+          Fill in your registration details, domain choice, and passion.
         </p>
+
+        {latestApplication ? (
+          <div className="mb-8 p-6 bg-[#111] border border-emerald-500/30 text-left">
+            <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/10">
+              <div className="flex items-center gap-2 text-emerald-400 font-mono text-xs">
+                <CheckCircle2 size={16} />
+                <span>ACTIVE APPLICATION FOUND</span>
+              </div>
+              <span className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs px-2 py-0.5 font-mono uppercase">
+                {latestApplication.domain}
+              </span>
+            </div>
+            <div className="font-mono text-sm mb-1 text-white">
+              Candidate: <strong>{latestApplication.fullName}</strong> ({latestApplication.regNumber})
+            </div>
+            <div className="font-mono text-xs text-gray-400 mb-4">
+              Tracking ID: <span className="text-emerald-400">{latestApplication.id}</span> · {latestApplication.year} · {latestApplication.subDomain || latestApplication.domain}
+            </div>
+            <button
+              type="button"
+              onClick={() => openApplyModal()}
+              className="btn-primary text-xs !py-3 !px-5"
+            >
+              SUBMIT ANOTHER APPLICATION →
+            </button>
+          </div>
+        ) : (
+          <div className="mb-8">
+            <button
+              type="button"
+              onClick={() => openApplyModal()}
+              className="btn-primary"
+            >
+              OPEN APPLICATION FORM <ArrowRight size={15} />
+            </button>
+          </div>
+        )}
 
         <div className={styles.panel}>
           <div className={styles.row}>
-            <span>AUTH</span>
-            <span className={styles.muted}>Google · Demo Mode</span>
-          </div>
-          <div className={styles.row}>
-            <span>VALIDATION</span>
-            <span className={styles.muted}>
-              RA · SRM email · Personal email · WhatsApp
-            </span>
+            <span>STUDENT AUTH</span>
+            <span className={styles.muted}>SRM Registration No · Email Validation</span>
           </div>
           <div className={styles.row}>
             <span>DOMAINS</span>
@@ -61,14 +91,19 @@ export default function ApplyPage() {
             </span>
           </div>
           <div className={styles.row}>
-            <span>SUBMIT</span>
-            <span className={styles.muted}>MongoDB · Tracking ID</span>
+            <span>TRACKING</span>
+            <span className={styles.muted}>
+              Instant Unique Slip ID · Stored Locally
+            </span>
+          </div>
+          <div className={styles.row}>
+            <span>SELECTION</span>
+            <span className={styles.muted}>Domain Task → Tech Interview → Core Onboarding</span>
           </div>
         </div>
 
         <p className={styles.note}>
-          Application form UI + API wiring is next. Design tokens match the
-          recruitment site.
+          Click the button above or anywhere on the landing page to open the recruitment pop-up.
         </p>
       </div>
     </main>
