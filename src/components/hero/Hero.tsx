@@ -58,7 +58,7 @@ export default function Hero() {
         actions: actionsRef.current,
         scrollTag: scrollRef.current,
       },
-      reduced,
+      true,
     );
 
     const cleanupParallax = bindHeroParallax(

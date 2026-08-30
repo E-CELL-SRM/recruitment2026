@@ -31,7 +31,7 @@
 
 .row {
   display: grid;
-  grid-template-columns: 56px 360px 1fr;
+  grid-template-columns: 56px 460px 1fr;
   gap: 32px;
   align-items: baseline;
   width: 100%;
@@ -88,7 +88,7 @@
 
 @media (max-width: 1024px) {
   .row {
-    grid-template-columns: 44px 260px 1fr;
+    grid-template-columns: 44px 300px 1fr;
     gap: 20px;
   }
 

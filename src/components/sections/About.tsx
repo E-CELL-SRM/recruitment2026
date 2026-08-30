@@ -7,9 +7,9 @@ import SectionLabel from "@/components/layout/SectionLabel";
 import styles from "./About.module.css";
 
 const stats = [
-  { value: "5", label: "Years of\nLegacy" },
-  { value: "50", label: "Startups\nSupported" },
-  { value: "20", label: "Events\nConducted" },
+  { value: "10", label: "Years of\nLegacy" },
+  { value: "500", label: "Startups\nSupported" },
+  { value: "150", label: "Events\nConducted" },
   { value: "20K", label: "Students\nImpacted" },
 ];
 

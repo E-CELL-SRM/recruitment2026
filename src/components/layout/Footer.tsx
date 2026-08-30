@@ -97,7 +97,7 @@ export default function Footer() {
         <div className={styles.bottom}>
           <span>© 2026 E-CELL SRMIST. ALL RIGHTS RESERVED.</span>
           <span>
-            DESIGNED &amp; BUILT BY LAKSHIT RAJ | Technical Head, E-Cell SRMIST | 7004996323 and ARYAN IYENGAR | TECHNICAL
+            DESIGNED &amp; BUILT BY LAKSHIT RAJ and ARYAN IYENGAR | TECHNICAL
             HEAD, E-CELL SRMIST
           </span>
         </div>

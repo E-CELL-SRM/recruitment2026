@@ -122,6 +122,7 @@ export default function Navbar() {
             <button
               type="button"
               className={styles.navLoginLink}
+              aria-label="Portal login"
               onClick={() => {
                 setOpen(false);
                 router.push("/login");
