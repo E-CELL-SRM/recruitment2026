@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
 import {
   createApplication,
+  updateApplication as updateApplicationDoc,
   getApplicationsByEmail,
   ApplicationData,
 } from "@/lib/firestore";
@@ -16,6 +17,10 @@ interface ApplyModalContextType {
   closeApplyModal: () => void;
   applications: ApplicationData[];
   saveApplication: (app: Omit<ApplicationData, "id" | "submittedAt">) => Promise<ApplicationData>;
+  updateApplication: (
+    id: string,
+    app: Omit<ApplicationData, "id" | "submittedAt">
+  ) => Promise<ApplicationData>;
   latestApplication: ApplicationData | null;
   fetchUserApplications: (email: string) => Promise<void>;
 }
@@ -116,6 +121,36 @@ export function ApplyModalProvider({ children }: { children: React.ReactNode }) 
     [applications]
   );
 
+  const updateApplication = useCallback(
+    async (
+      id: string,
+      appData: Omit<ApplicationData, "id" | "submittedAt">
+    ): Promise<ApplicationData> => {
+      const submittedAt = new Date().toISOString();
+      let updatedApp: ApplicationData;
+
+      try {
+        updatedApp = await updateApplicationDoc(id, { ...appData, submittedAt });
+      } catch (err) {
+        console.error("Failed to update application in Firestore:", err);
+        // Fall back to a locally-updated record so the edit still reflects
+        // in this session even if the Firestore write failed.
+        updatedApp = { ...appData, id, submittedAt };
+      }
+
+      const updated = [updatedApp, ...applications.filter((a) => a.id !== updatedApp.id)];
+      setApplications(updated);
+      setLatestApplication(updatedApp);
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      } catch {
+        // ignore
+      }
+      return updatedApp;
+    },
+    [applications]
+  );
+
   return (
     <ApplyModalContext.Provider
       value={{
@@ -125,6 +160,7 @@ export function ApplyModalProvider({ children }: { children: React.ReactNode }) 
         closeApplyModal,
         applications,
         saveApplication,
+        updateApplication,
         latestApplication,
         fetchUserApplications,
       }}

@@ -53,8 +53,23 @@ service cloud.firestore {
         request.resource.data.fullName is string &&
         request.resource.data.fullName.size() > 0;
 
-      // Applications are immutable once submitted.
-      allow update, delete: if false;
+      // A candidate may edit their own application in place (used by the
+      // "already applied — edit my application" flow, so revising an
+      // application never creates a second/duplicate doc). The tracking
+      // ID and owning email can never change on an update; a real
+      // Google-authenticated user must additionally match the email the
+      // doc was created under. The unauthenticated email-only fallback
+      // path keeps the same trust level `create` already grants it.
+      allow update: if
+        request.resource.data.id == resource.data.id &&
+        request.resource.data.applicantEmail == resource.data.applicantEmail &&
+        (
+          request.auth == null ||
+          (request.auth.token.email != null &&
+           request.auth.token.email.lower() == resource.data.applicantEmail)
+        );
+
+      allow delete: if false;
     }
   }
 }

@@ -762,57 +762,12 @@
   word-break: break-all;
 }
 
-/* Timeline / Next Steps */
-.timeline {
-  width: 100%;
-  max-width: 520px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  text-align: left;
-}
-
 .timelineHeading {
   font-family: var(--font-jetbrains), monospace;
   font-size: 11px;
   letter-spacing: 0.1em;
   color: var(--gray);
   text-transform: uppercase;
-}
-
-.stepsGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-}
-
-.stepBox {
-  background: #111111;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.stepNum {
-  font-family: var(--font-jetbrains), monospace;
-  font-size: 10px;
-  color: var(--green);
-  font-weight: 700;
-}
-
-.stepName {
-  font-family: var(--font-syne), sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--off-white);
-}
-
-.stepDesc {
-  font-size: 10px;
-  color: #7a7a75;
-  line-height: 1.4;
 }
 
 /* Follow Us */
@@ -823,6 +778,15 @@
   flex-direction: column;
   gap: 10px;
   text-align: left;
+  background: #111111;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 16px;
+}
+
+.followText {
+  font-size: 13px;
+  color: #c4c4be;
+  line-height: 1.5;
 }
 
 .followLink {
@@ -942,11 +906,6 @@
   .subChip {
     font-size: 10px;
     padding: 5px 8px;
-  }
-
-  .stepsGrid {
-    grid-template-columns: 1fr;
-    gap: 6px;
   }
 
   .footer {

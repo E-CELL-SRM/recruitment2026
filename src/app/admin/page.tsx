@@ -74,6 +74,7 @@ export default function AdminPage() {
   const [passcodeError, setPasscodeError] = useState(false);
 
   const [applications, setApplications] = useState<ApplicationData[] | null>(null);
+  const [duplicatesHidden, setDuplicatesHidden] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState("all");
@@ -86,8 +87,22 @@ export default function AdminPage() {
       try {
         const snap = await getDocs(collection(db, "applications"));
         const rows = snap.docs.map((d) => d.data() as ApplicationData);
+        // Newest submission first, per applicant email — so re-submits (or
+        // legacy duplicate form-fills from before edit-in-place existed)
+        // collapse down to just the most recent one for that person.
         rows.sort((a, b) => (a.submittedAt < b.submittedAt ? 1 : -1));
-        if (!cancelled) setApplications(rows);
+        const seenEmails = new Set<string>();
+        const deduped = rows.filter((row) => {
+          const key = (row.applicantEmail || "").toLowerCase();
+          if (!key) return true;
+          if (seenEmails.has(key)) return false;
+          seenEmails.add(key);
+          return true;
+        });
+        if (!cancelled) {
+          setApplications(deduped);
+          setDuplicatesHidden(rows.length - deduped.length);
+        }
       } catch (err) {
         if (!cancelled) {
           setError(err instanceof Error ? err.message : "Failed to load applications");
@@ -172,7 +187,13 @@ export default function AdminPage() {
             )}
           </h1>
           <p style={styles.subtitle}>
-            {applications ? `${filtered.length} shown` : "Loading…"}
+            {applications
+              ? `${filtered.length} shown${
+                  duplicatesHidden > 0
+                    ? ` · ${duplicatesHidden} duplicate re-submission${duplicatesHidden === 1 ? "" : "s"} hidden (most recent kept)`
+                    : ""
+                }`
+              : "Loading…"}
           </p>
         </div>
         <div style={styles.actions}>

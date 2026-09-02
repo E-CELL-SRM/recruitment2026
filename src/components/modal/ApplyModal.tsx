@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useApplyModal, ApplicationData } from "@/context/ApplyModalContext";
 import { useAuth } from "@/context/AuthContext";
+import { getApplicationsByEmail } from "@/lib/firestore";
 import {
   X,
   CheckCircle2,
@@ -198,7 +199,7 @@ function getDomainPortfolioConfig(domainId: string, subTrackName: string) {
 }
 
 export default function ApplyModal() {
-  const { isOpen, closeApplyModal, selectedDomain, saveApplication } = useApplyModal();
+  const { isOpen, closeApplyModal, selectedDomain, saveApplication, updateApplication } = useApplyModal();
   const { user, userProfile, signInWithGoogle, signInWithEmailOnly } = useAuth();
   const activeCandidate = userProfile || (user ? {
     uid: user.uid,
@@ -222,6 +223,15 @@ export default function ApplyModal() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
+  // Duplicate-application guard: once we know the signed-in candidate's
+  // email, we check Firestore for an application already on file for it.
+  // If one exists, we show a "you've already applied" panel instead of a
+  // blank form, with the option to edit that same application in place
+  // rather than ever submitting a second one.
+  const [existingApp, setExistingApp] = useState<ApplicationData | null>(null);
+  const [checkingExisting, setCheckingExisting] = useState(false);
+  const [isEditingExisting, setIsEditingExisting] = useState(false);
+
   const [showManualForm, setShowManualForm] = useState(false);
   const [manualName, setManualName] = useState("");
   const [manualEmail, setManualEmail] = useState("");
@@ -243,6 +253,8 @@ export default function ApplyModal() {
       }
       setSubmittedApp(null);
       setErrors({});
+      setExistingApp(null);
+      setIsEditingExisting(false);
     }
     // `activeCandidate` is intentionally excluded: it's a new object every
     // render (see its derivation above), and it isn't used in this effect.
@@ -251,6 +263,51 @@ export default function ApplyModal() {
     // reference, which re-triggered this effect indefinitely.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, selectedDomain]);
+
+  // Duplicate guard: as soon as we know who's signed in (whether they were
+  // already logged in from a previous visit, or just signed in inside this
+  // form), check whether this email already has an application on file.
+  useEffect(() => {
+    const email = activeCandidate?.email;
+    if (!isOpen || !email) {
+      setExistingApp(null);
+      setCheckingExisting(false);
+      return;
+    }
+
+    let cancelled = false;
+    setCheckingExisting(true);
+    getApplicationsByEmail(email)
+      .then((apps) => {
+        if (!cancelled) setExistingApp(apps[0] || null);
+      })
+      .catch(() => {
+        if (!cancelled) setExistingApp(null);
+      })
+      .finally(() => {
+        if (!cancelled) setCheckingExisting(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isOpen, activeCandidate?.email]);
+
+  // Pre-fill the form with the candidate's existing application and drop
+  // into edit mode, so resubmitting updates that same doc instead of
+  // creating a second one.
+  const startEditingExisting = () => {
+    if (!existingApp) return;
+    setRegNumber(existingApp.regNumber || "");
+    setDomain(existingApp.domain || "technical");
+    setSubTrack(existingApp.subDomain || "");
+    setPhone(existingApp.phone || "");
+    setYear(existingApp.year || "1st Year");
+    setSkillsOrExperience(existingApp.skillsOrExperience || "");
+    setReason(existingApp.reason || "");
+    setPortfolioUrl(existingApp.portfolioUrl || "");
+    setIsEditingExisting(true);
+  };
 
   // Update default sub-track when domain changes
   const handleDomainChange = (dId: string) => {
@@ -283,8 +340,8 @@ export default function ApplyModal() {
     }
   };
 
-  const handleModalManualSignIn = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleModalManualSignIn = async (e?: React.SyntheticEvent) => {
+    e?.preventDefault();
     setManualAuthError(null);
 
     const trimmedName = manualName.trim();
@@ -346,20 +403,25 @@ export default function ApplyModal() {
 
     setIsSubmitting(true);
 
+    const payload = {
+      userId: activeCandidate?.uid || "",
+      applicantEmail,
+      fullName: applicantName,
+      regNumber: regNumber.trim().toUpperCase(),
+      domain,
+      subDomain: subTrack,
+      phone: phone.trim(),
+      year,
+      skillsOrExperience: skillsOrExperience.trim(),
+      reason: reason.trim(),
+      portfolioUrl: portfolioUrl.trim(),
+    };
+
     try {
-      const app = await saveApplication({
-        userId: activeCandidate?.uid || "",
-        applicantEmail,
-        fullName: applicantName,
-        regNumber: regNumber.trim().toUpperCase(),
-        domain,
-        subDomain: subTrack,
-        phone: phone.trim(),
-        year,
-        skillsOrExperience: skillsOrExperience.trim(),
-        reason: reason.trim(),
-        portfolioUrl: portfolioUrl.trim(),
-      });
+      const app =
+        isEditingExisting && existingApp
+          ? await updateApplication(existingApp.id, payload)
+          : await saveApplication(payload);
 
       setSubmittedApp(app);
     } catch (err) {
@@ -384,12 +446,14 @@ export default function ApplyModal() {
     setReason("");
     setPortfolioUrl("");
     setErrors({});
+    setIsEditingExisting(false);
   };
 
   if (!isOpen) return null;
 
   const currentDomainObj = DOMAIN_OPTIONS.find((d) => d.id === domain);
   const domainConfig = getDomainPortfolioConfig(domain, subTrack);
+  const showAlreadyApplied = !submittedApp && !isEditingExisting && !!existingApp;
 
   return (
     <div
@@ -413,7 +477,9 @@ export default function ApplyModal() {
           <div>
             <h2 id="modal-title" className={styles.headerTitle}>
               {submittedApp ? (
-                "APPLICATION CONFIRMED"
+                isEditingExisting ? "APPLICATION UPDATED" : "APPLICATION CONFIRMED"
+              ) : showAlreadyApplied ? (
+                "APPLICATION ALREADY RECEIVED"
               ) : (
                 <>
                   JOIN THE <span className={styles.headerAccent}>BUILD.</span>
@@ -421,7 +487,7 @@ export default function ApplyModal() {
               )}
             </h2>
             <p className={styles.headerSub}>
-              {submittedApp
+              {submittedApp || showAlreadyApplied
                 ? "E-Cell SRMIST Recruitment 2026 Portal"
                 : "07 / RECRUITMENT APPLICATION FORM"}
             </p>
@@ -440,7 +506,69 @@ export default function ApplyModal() {
         </div>
 
         {/* Content */}
-        {!submittedApp ? (
+        {showAlreadyApplied && existingApp ? (
+          <div className={styles.body}>
+            <div className={styles.successWrap}>
+              <div className={styles.successIconWrap}>
+                <CheckCircle2 size={28} />
+              </div>
+              <h3 className={styles.successTitle}>
+                You&apos;ve Already <span className={styles.headerAccent}>Applied.</span>
+              </h3>
+              <p className={styles.successSub}>
+                We found an application already on file for{" "}
+                <strong>{activeCandidate?.email}</strong> — tracking ID{" "}
+                <strong>{existingApp.id}</strong>, submitted for the{" "}
+                <strong>{existingApp.domain}</strong> domain. No need to apply again.
+              </p>
+
+              <div className={styles.followSection}>
+                <div className={styles.timelineHeading}>Don&apos;t Miss Your Recruitment Tasks</div>
+                <p className={styles.followText}>
+                  Task drops, deadlines and round updates go out on our Instagram first.
+                  Follow @ecell_srmist so you don&apos;t miss yours.
+                </p>
+                <a
+                  href="https://www.instagram.com/ecell_srmist?igsi=cWUwamRkNzl3YnEy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.followLink}
+                >
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden
+                  >
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                  </svg>
+                  Follow @ecell_srmist on Instagram
+                  <ChevronRight size={12} />
+                </a>
+              </div>
+
+              <div className={styles.successActions}>
+                <button type="button" onClick={startEditingExisting} className="btn-primary">
+                  Edit My Application <ChevronRight size={14} />
+                </button>
+                <button type="button" onClick={closeApplyModal} className={styles.resetBtn}>
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : checkingExisting ? (
+          <div className={styles.body}>
+            <p className={styles.followText}>Checking your application status…</p>
+          </div>
+        ) : !submittedApp ? (
           <form
             onSubmit={handleSubmit}
             className={styles.formWrap}
@@ -509,7 +637,12 @@ export default function ApplyModal() {
                     </div>
                   </>
                 ) : (
-                  <form className={styles.manualAuthForm} onSubmit={handleModalManualSignIn}>
+                  // Not a <form>: this sits inside the main application
+                  // <form>, and HTML doesn't allow nested forms — the
+                  // browser silently restructures the DOM if it is one,
+                  // breaking React's hydration. Enter-to-submit is
+                  // preserved via onKeyDown on the inputs instead.
+                  <div className={styles.manualAuthForm}>
                     <div className={styles.googlePromptContent}>
                       <span className={styles.googlePromptTitle}>Enter Your Details</span>
                       <span className={styles.googlePromptSub}>
@@ -522,6 +655,7 @@ export default function ApplyModal() {
                         placeholder="Full Name"
                         value={manualName}
                         onChange={(e) => setManualName(e.target.value)}
+                        onKeyDown={(e) => e.key === "Enter" && handleModalManualSignIn(e)}
                         className={styles.manualAuthInput}
                         autoComplete="name"
                       />
@@ -530,6 +664,7 @@ export default function ApplyModal() {
                         placeholder="Email Address"
                         value={manualEmail}
                         onChange={(e) => setManualEmail(e.target.value)}
+                        onKeyDown={(e) => e.key === "Enter" && handleModalManualSignIn(e)}
                         className={styles.manualAuthInput}
                         autoComplete="email"
                       />
@@ -537,8 +672,9 @@ export default function ApplyModal() {
                     {manualAuthError && <p className={styles.errorText}>{manualAuthError}</p>}
                     <div className={styles.authBtnStack}>
                       <button
-                        type="submit"
+                        type="button"
                         className={styles.modalGoogleBtn}
+                        onClick={handleModalManualSignIn}
                         disabled={isManualSigningIn}
                       >
                         {isManualSigningIn ? "Signing In..." : "Continue"}
@@ -554,7 +690,7 @@ export default function ApplyModal() {
                         Back to Google sign-in
                       </button>
                     </div>
-                  </form>
+                  </div>
                 )}
               </div>
               {errors.auth && <p className={styles.errorText}>{errors.auth}</p>}
@@ -859,31 +995,13 @@ export default function ApplyModal() {
                 </div>
               </div>
 
-              {/* Timeline Roadmap */}
-              <div className={styles.timeline}>
-                <div className={styles.timelineHeading}>What Happens Next</div>
-                <div className={styles.stepsGrid}>
-                  <div className={styles.stepBox}>
-                    <span className={styles.stepNum}>STEP 01</span>
-                    <span className={styles.stepName}>Task Assessment</span>
-                    <span className={styles.stepDesc}>Domain challenge prompt sent to your Google email</span>
-                  </div>
-                  <div className={styles.stepBox}>
-                    <span className={styles.stepNum}>STEP 02</span>
-                    <span className={styles.stepName}>Technical Round</span>
-                    <span className={styles.stepDesc}>1-on-1 interview with domain leads & senior core team</span>
-                  </div>
-                  <div className={styles.stepBox}>
-                    <span className={styles.stepNum}>STEP 03</span>
-                    <span className={styles.stepName}>Onboarding</span>
-                    <span className={styles.stepDesc}>Final induction ceremony & orientation into E-Cell SRMIST</span>
-                  </div>
-                </div>
-              </div>
-
               {/* Follow Us */}
               <div className={styles.followSection}>
-                <div className={styles.timelineHeading}>Stay Updated</div>
+                <div className={styles.timelineHeading}>Don&apos;t Miss Your Recruitment Tasks</div>
+                <p className={styles.followText}>
+                  Task drops, deadlines and round updates go out on our Instagram first.
+                  Follow @ecell_srmist so you don&apos;t miss yours.
+                </p>
                 <a
                   href="https://www.instagram.com/ecell_srmist?igsi=cWUwamRkNzl3YnEy"
                   target="_blank"

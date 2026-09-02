@@ -2,6 +2,7 @@ import {
   doc,
   getDoc,
   setDoc,
+  updateDoc,
   collection,
   query,
   where,
@@ -119,6 +120,24 @@ export async function createApplication(
   const ref = doc(db, APPLICATIONS_COLLECTION, id);
   await setDoc(ref, application);
   return application;
+}
+
+// Updates an existing application doc in place (same tracking ID), so a
+// candidate revising their answers never produces a second/duplicate doc.
+export async function updateApplication(
+  id: string,
+  updates: Partial<Omit<ApplicationData, "id">>
+): Promise<ApplicationData> {
+  const ref = doc(db, APPLICATIONS_COLLECTION, id);
+  const payload = {
+    ...updates,
+    ...(updates.applicantEmail
+      ? { applicantEmail: updates.applicantEmail.toLowerCase() }
+      : {}),
+  };
+  await updateDoc(ref, payload);
+  const snap = await getDoc(ref);
+  return snap.data() as ApplicationData;
 }
 
 export async function getApplicationsByEmail(
