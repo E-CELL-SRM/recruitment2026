@@ -48,6 +48,8 @@ export interface ApplicationData {
   skillsOrExperience?: string;
   reason?: string;
   portfolioUrl?: string;
+  githubUrl?: string;
+  linkedinUrl?: string;
   submittedAt: string;
 }
 

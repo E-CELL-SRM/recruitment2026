@@ -1,0 +1,269 @@
+.bellBtn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: transparent;
+  color: #bfbfb8;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  flex-shrink: 0;
+}
+
+.bellBtn:hover {
+  border-color: var(--green);
+  color: var(--green);
+}
+
+.pulseDot {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 0 rgba(0, 200, 83, 0.6);
+  animation: pulse 1.8s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 200, 83, 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(0, 200, 83, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 200, 83, 0);
+  }
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  background: rgba(5, 5, 5, 0.78);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.25s var(--ease);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.panel {
+  --accent: var(--green);
+  --accent-glow: rgba(0, 200, 83, 0.35);
+  position: relative;
+  width: min(460px, 100%);
+  max-height: 88vh;
+  overflow-y: auto;
+  background: #0a0a0a;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 2px solid var(--accent);
+  box-shadow: 0 0 60px -12px var(--accent-glow);
+  padding: 28px 26px 26px;
+  animation: popIn 0.3s var(--ease);
+}
+
+/* Fully themed domain cards (cyberpunk/comic/office) own their entire
+   background and padding, so the panel gets out of their way. */
+.panelThemed {
+  padding: 0;
+  border-top: none;
+  box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.6);
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.closeBtn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 5;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: transparent;
+  color: #bfbfb8;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.closeBtn:hover {
+  border-color: #ff5252;
+  color: #ff5252;
+}
+
+/* Comic/office cards have a light background, so the close button needs
+   dark ink instead of the default light-on-dark styling. */
+.closeBtnDark {
+  border-color: rgba(0, 0, 0, 0.25);
+  color: #0a3d20;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.closeBtnDark:hover {
+  border-color: #00a847;
+  color: #00a847;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding-right: 24px;
+}
+
+.badge {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent, var(--green));
+  border: 1px solid var(--accent, var(--green));
+  padding: 4px 8px;
+}
+
+.date {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 10.5px;
+  color: var(--gray);
+}
+
+.title {
+  font-family: var(--font-syne), sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.2;
+  color: var(--off-white);
+  margin-bottom: 10px;
+}
+
+.teaser {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--gray);
+  margin-bottom: 20px;
+}
+
+.pickerWrap {
+  border-top: 1px dashed rgba(255, 255, 255, 0.12);
+  padding-top: 18px;
+}
+
+.pickerLabel {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #c4c4be;
+  margin-bottom: 10px;
+}
+
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.domainChip {
+  --accent: var(--green);
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 12px;
+  padding: 8px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: #111111;
+  color: var(--off-white);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.domainChip:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.domainCard {
+  border-top: 1px dashed rgba(255, 255, 255, 0.12);
+  padding-top: 18px;
+}
+
+.domainCardTag {
+  display: inline-block;
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border: 1px solid var(--accent);
+  padding: 3px 8px;
+  margin-bottom: 12px;
+}
+
+.domainHeading {
+  font-family: var(--font-syne), sans-serif;
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--off-white);
+  margin-bottom: 8px;
+}
+
+.domainMessage {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--gray);
+  margin-bottom: 20px;
+}
+
+.joinBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #25d366;
+  color: #052e16 !important;
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 12px 18px;
+  text-decoration: none;
+  transition: all 0.25s var(--ease);
+}
+
+.joinBtn:hover {
+  background: #1fb856;
+  gap: 12px;
+}

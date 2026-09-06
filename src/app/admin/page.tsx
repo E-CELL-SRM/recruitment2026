@@ -32,6 +32,8 @@ const COLUMNS: { key: keyof ApplicationData; label: string }[] = [
   { key: "year", label: "Year" },
   { key: "phone", label: "Phone" },
   { key: "portfolioUrl", label: "Portfolio" },
+  { key: "githubUrl", label: "GitHub" },
+  { key: "linkedinUrl", label: "LinkedIn" },
 ];
 
 // Matches the `id`s stored on each application doc — see DOMAIN_OPTIONS

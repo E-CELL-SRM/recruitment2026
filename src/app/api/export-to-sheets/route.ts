@@ -39,6 +39,8 @@ const COLUMNS = [
   "phone",
   "skillsOrExperience",
   "portfolioUrl",
+  "githubUrl",
+  "linkedinUrl",
   "reason",
   "userId",
 ] as const;

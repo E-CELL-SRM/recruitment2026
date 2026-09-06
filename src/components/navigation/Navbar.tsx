@@ -8,6 +8,7 @@ import { useApplyModal } from "@/context/ApplyModalContext";
 import { useAuth } from "@/context/AuthContext";
 import { scrollToTarget } from "@/lib/animations/scroll";
 import { LogIn } from "lucide-react";
+import NotificationCenter from "@/components/notifications/NotificationCenter";
 import styles from "./Navbar.module.css";
 
 const links = [
@@ -132,6 +133,10 @@ export default function Navbar() {
               <span>PORTAL LOGIN</span>
             </button>
           )}
+        </li>
+
+        <li>
+          <NotificationCenter />
         </li>
 
         <li>

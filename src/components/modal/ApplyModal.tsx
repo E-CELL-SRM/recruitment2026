@@ -19,6 +19,8 @@ import {
   Sparkles,
   Lock,
   LogIn,
+  Plus,
+  Trash2,
 } from "lucide-react";
 
 import styles from "./ApplyModal.module.css";
@@ -215,7 +217,21 @@ export default function ApplyModal() {
   const [year, setYear] = useState("1st Year");
   const [skillsOrExperience, setSkillsOrExperience] = useState("");
   const [reason, setReason] = useState("");
-  const [portfolioUrl, setPortfolioUrl] = useState("");
+  const [portfolioUrls, setPortfolioUrls] = useState<string[]>([""]);
+  const [githubUrl, setGithubUrl] = useState("");
+  const [linkedinUrl, setLinkedinUrl] = useState("");
+
+  const updatePortfolioUrl = (index: number, value: string) => {
+    setPortfolioUrls((prev) => prev.map((url, i) => (i === index ? value : url)));
+  };
+
+  const addPortfolioUrl = () => {
+    setPortfolioUrls((prev) => [...prev, ""]);
+  };
+
+  const removePortfolioUrl = (index: number) => {
+    setPortfolioUrls((prev) => (prev.length === 1 ? [""] : prev.filter((_, i) => i !== index)));
+  };
 
   const [submittedApp, setSubmittedApp] = useState<ApplicationData | null>(null);
   const [copied, setCopied] = useState(false);
@@ -305,7 +321,13 @@ export default function ApplyModal() {
     setYear(existingApp.year || "1st Year");
     setSkillsOrExperience(existingApp.skillsOrExperience || "");
     setReason(existingApp.reason || "");
-    setPortfolioUrl(existingApp.portfolioUrl || "");
+    const existingLinks = (existingApp.portfolioUrl || "")
+      .split("\n")
+      .map((u) => u.trim())
+      .filter(Boolean);
+    setPortfolioUrls(existingLinks.length > 0 ? existingLinks : [""]);
+    setGithubUrl(existingApp.githubUrl || "");
+    setLinkedinUrl(existingApp.linkedinUrl || "");
     setIsEditingExisting(true);
   };
 
@@ -390,6 +412,15 @@ export default function ApplyModal() {
       newErrors.phone = "Enter a valid 10-digit mobile number";
     }
 
+    if (domain === "technical") {
+      if (!githubUrl.trim()) {
+        newErrors.githubUrl = "GitHub profile URL is required";
+      }
+      if (!linkedinUrl.trim()) {
+        newErrors.linkedinUrl = "LinkedIn profile URL is required";
+      }
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -414,7 +445,9 @@ export default function ApplyModal() {
       year,
       skillsOrExperience: skillsOrExperience.trim(),
       reason: reason.trim(),
-      portfolioUrl: portfolioUrl.trim(),
+      portfolioUrl: portfolioUrls.map((u) => u.trim()).filter(Boolean).join("\n"),
+      githubUrl: domain === "technical" ? githubUrl.trim() : "",
+      linkedinUrl: domain === "technical" ? linkedinUrl.trim() : "",
     };
 
     try {
@@ -444,7 +477,9 @@ export default function ApplyModal() {
     setPhone("");
     setSkillsOrExperience("");
     setReason("");
-    setPortfolioUrl("");
+    setPortfolioUrls([""]);
+    setGithubUrl("");
+    setLinkedinUrl("");
     setErrors({});
     setIsEditingExisting(false);
   };
@@ -828,20 +863,85 @@ export default function ApplyModal() {
                   <p className={styles.domainHintText}>{domainConfig.portfolioHint}</p>
                 </div>
 
-                {/* Domain Portfolio Link Input */}
+                {/* Technical domain: GitHub + LinkedIn are always required */}
+                {domain === "technical" && (
+                  <>
+                    <div className={styles.field}>
+                      <label className={styles.label} htmlFor="student-github">
+                        <span>GitHub Profile URL</span>
+                        <span className={styles.required}>*</span>
+                      </label>
+                      <input
+                        id="student-github"
+                        type="url"
+                        className={styles.input}
+                        placeholder="https://github.com/username"
+                        value={githubUrl}
+                        onChange={(e) => setGithubUrl(e.target.value)}
+                      />
+                      {errors.githubUrl && <p className={styles.errorText}>{errors.githubUrl}</p>}
+                    </div>
+
+                    <div className={styles.field}>
+                      <label className={styles.label} htmlFor="student-linkedin">
+                        <span>LinkedIn Profile URL</span>
+                        <span className={styles.required}>*</span>
+                      </label>
+                      <input
+                        id="student-linkedin"
+                        type="url"
+                        className={styles.input}
+                        placeholder="https://linkedin.com/in/username"
+                        value={linkedinUrl}
+                        onChange={(e) => setLinkedinUrl(e.target.value)}
+                      />
+                      {errors.linkedinUrl && <p className={styles.errorText}>{errors.linkedinUrl}</p>}
+                    </div>
+                  </>
+                )}
+
+                {/* Domain Portfolio Link Input(s) */}
                 <div className={styles.field}>
-                  <label className={styles.label} htmlFor="student-portfolio">
-                    <span>{domainConfig.portfolioLabel}</span>
-                    <span className={styles.optional}>recommended</span>
+                  <label className={styles.label} htmlFor="student-portfolio-0">
+                    <span>
+                      {domain === "technical" ? "Other Live Project / Web App URLs" : domainConfig.portfolioLabel}
+                    </span>
+                    <span className={styles.optional}>{domain === "technical" ? "optional" : "recommended"}</span>
                   </label>
-                  <input
-                    id="student-portfolio"
-                    type="url"
-                    className={styles.input}
-                    placeholder={domainConfig.portfolioPlaceholder}
-                    value={portfolioUrl}
-                    onChange={(e) => setPortfolioUrl(e.target.value)}
-                  />
+                  {portfolioUrls.map((url, index) => (
+                    <div className={styles.linkRow} key={index}>
+                      <input
+                        id={`student-portfolio-${index}`}
+                        type="url"
+                        className={styles.input}
+                        placeholder={
+                          index === 0
+                            ? domainConfig.portfolioPlaceholder
+                            : "https://..."
+                        }
+                        value={url}
+                        onChange={(e) => updatePortfolioUrl(index, e.target.value)}
+                      />
+                      {portfolioUrls.length > 1 && (
+                        <button
+                          type="button"
+                          className={styles.removeLinkBtn}
+                          onClick={() => removePortfolioUrl(index)}
+                          aria-label="Remove link"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    className={styles.addLinkBtn}
+                    onClick={addPortfolioUrl}
+                  >
+                    <Plus size={13} />
+                    <span>Add another link</span>
+                  </button>
                   <span className={styles.helperText}>
                     Provide public links (GitHub, Figma, Behance, LinkedIn, or Google Drive)
                   </span>
