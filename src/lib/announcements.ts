@@ -54,16 +54,6 @@ export interface Announcement {
   fallbackMessage: string;
 }
 
-// Invite links come from env vars (set in .env.local, documented in
-// .env.example) rather than being hardcoded here. A domain resolves to
-// `null` if its var isn't set, which shows the "coming soon" card instead
-// of a broken link.
-const WHATSAPP_LINKS = {
-  technical: process.env.NEXT_PUBLIC_WHATSAPP_TECHNICAL || null,
-  creative: process.env.NEXT_PUBLIC_WHATSAPP_CREATIVE || null,
-  corporate: process.env.NEXT_PUBLIC_WHATSAPP_CORPORATE || null,
-};
-
 export const ANNOUNCEMENTS: Announcement[] = [
   {
     id: "whatsapp-groups-2026-09-06",
@@ -78,21 +68,21 @@ export const ANNOUNCEMENTS: Announcement[] = [
         message:
           "SECTOR: TECHNICAL. Task drops, deadlines, and doubt-solving now route through this channel. Jack in.",
         ctaLabel: "JOIN_CHANNEL.exe",
-        link: WHATSAPP_LINKS.technical,
+        link: "https://chat.whatsapp.com/Ep4tDBOERNC3yQGI6mMt0f",
       },
       creative: {
         heading: "CREATIVE SQUAD, ASSEMBLE!",
         message:
           "Every designer, editor, and storyteller in one thread — briefs, references, and drops swing in here first.",
         ctaLabel: "Swing Into The Group",
-        link: WHATSAPP_LINKS.creative,
+        link: "https://chat.whatsapp.com/KpzGUfbwFuOKWLeheCMaKz",
       },
       corporate: {
         heading: "Re: Corporate Group Now Open",
         message:
           "Per our last meeting — sponsorship leads, outreach, and event ops updates now go through this channel effective immediately.",
         ctaLabel: "Join The Group",
-        link: WHATSAPP_LINKS.corporate,
+        link: "https://chat.whatsapp.com/FA0O6xDlDyT3TszO6fTfqX",
       },
     },
     fallbackMessage:

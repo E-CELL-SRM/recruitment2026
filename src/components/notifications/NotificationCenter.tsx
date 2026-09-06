@@ -104,9 +104,8 @@ export default function NotificationCenter() {
 
   // Technical/Creative/Corporate get a fully custom themed card (cyberpunk,
   // comic, office); Legal & Finance has no group yet so it stays on the
-  // plain dark card below along with the generic header. A domain whose
-  // invite link isn't configured (env var unset) also falls back to that
-  // plain card rather than showing a themed card with a dead button.
+  // plain dark card below along with the generic header. A domain with no
+  // link set also falls back to that plain card instead of a dead button.
   const isFullyThemed = !!domainContent?.link && theme !== "classic" && theme !== null;
 
   const handleOpen = () => {
