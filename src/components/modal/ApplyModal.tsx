@@ -25,6 +25,10 @@ import {
 
 import styles from "./ApplyModal.module.css";
 
+// Flip to false to reopen applications — every "Join Now"/"Apply" button
+// funnels through this one modal, so this single flag gates all of them.
+const REGISTRATIONS_CLOSED = true;
+
 const DOMAIN_OPTIONS = [
   {
     id: "technical",
@@ -485,6 +489,94 @@ export default function ApplyModal() {
   };
 
   if (!isOpen) return null;
+
+  if (REGISTRATIONS_CLOSED) {
+    return (
+      <div
+        className={styles.backdrop}
+        data-lenis-prevent="true"
+        onClick={(e) => {
+          if (e.target === e.currentTarget) closeApplyModal();
+        }}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+      >
+        <div className={styles.modal} data-lenis-prevent="true" onWheel={(e) => e.stopPropagation()}>
+          <div className={styles.header}>
+            <div>
+              <h2 id="modal-title" className={styles.headerTitle}>
+                REGISTRATIONS <span className={styles.headerAccent}>CLOSED</span>
+              </h2>
+              <p className={styles.headerSub}>E-Cell SRMIST Recruitment 2026 Portal</p>
+            </div>
+            <div className={styles.headerActions}>
+              <button
+                type="button"
+                className={styles.closeBtn}
+                onClick={closeApplyModal}
+                aria-label="Close"
+              >
+                <X size={18} />
+              </button>
+            </div>
+          </div>
+
+          <div className={styles.body}>
+            <div className={styles.successWrap}>
+              <div className={styles.successIconWrap}>
+                <Lock size={28} />
+              </div>
+              <h3 className={styles.successTitle}>
+                Registrations Are <span className={styles.headerAccent}>Closed.</span>
+              </h3>
+              <p className={styles.successSub}>
+                We&apos;re no longer accepting new applications for E-Cell SRMIST Recruitment 2026.
+                Thank you for your interest — keep an eye on our socials for the next recruitment cycle.
+              </p>
+
+              <div className={styles.followSection}>
+                <div className={styles.timelineHeading}>Stay In The Loop</div>
+                <p className={styles.followText}>
+                  Follow @ecell_srmist on Instagram so you don&apos;t miss our next recruitment drive.
+                </p>
+                <a
+                  href="https://www.instagram.com/ecell_srmist?igsi=cWUwamRkNzl3YnEy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.followLink}
+                >
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden
+                  >
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                  </svg>
+                  Follow @ecell_srmist on Instagram
+                  <ChevronRight size={12} />
+                </a>
+              </div>
+
+              <div className={styles.successActions}>
+                <button type="button" onClick={closeApplyModal} className={styles.resetBtn}>
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const currentDomainObj = DOMAIN_OPTIONS.find((d) => d.id === domain);
   const domainConfig = getDomainPortfolioConfig(domain, subTrack);
