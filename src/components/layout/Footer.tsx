@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useApplyModal } from "@/context/ApplyModalContext";
 import styles from "./Footer.module.css";
 
@@ -31,21 +32,21 @@ export default function Footer() {
           <div className={styles.cols}>
             <div className={styles.col}>
               <h5>Links</h5>
-              <a href="/#about" data-cursor="→">
+              <Link href="/#about" data-cursor="→">
                 About
-              </a>
-              <a href="/#domains" data-cursor="→">
+              </Link>
+              <Link href="/#domains" data-cursor="→">
                 Domains
-              </a>
-              <a href="/#experience" data-cursor="→">
+              </Link>
+              <Link href="/#experience" data-cursor="→">
                 Experience
-              </a>
-              <a href="/events" data-cursor="→">
+              </Link>
+              <Link href="/events" data-cursor="→">
                 Events
-              </a>
-              <a href="/blogs" data-cursor="→">
+              </Link>
+              <Link href="/blogs" data-cursor="→">
                 Blogs
-              </a>
+              </Link>
               <button
                 type="button"
                 onClick={() => openApplyModal()}
