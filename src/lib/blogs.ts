@@ -1,8 +1,8 @@
 // ---------------------------------------------------------------------
-// Blog posts shown on /blogs. Add a new entry to BLOGS for each new post —
-// newest first. The newest posts also surface in the navbar notification
-// bell (see NotificationCenter), so a new entry here is all it takes to
-// publish and announce a post.
+// Blog posts listed on /blogs and opened at /blogs/<slug>. Add a new entry to
+// BLOGS for each new post — newest first. The newest posts also surface in
+// the navbar notification bell (see NotificationCenter), so a new entry
+// here is all it takes to publish and announce a post.
 // ---------------------------------------------------------------------
 
 // A plain string is a paragraph; the objects give a post some structure.
@@ -24,6 +24,17 @@ export interface BlogPost {
   image: string;
   body: BlogBlock[];
 }
+
+// The welcome shown at the top of the /blogs landing page. It isn't a post
+// itself — the banner below it lists the posts in BLOGS.
+export const BLOGS_INTRO = {
+  title: "Welcome to the E-Cell Blog",
+  body: [
+    "This is the home for everything E-Cell SRMIST wants to say at more length than a social post allows — recruitment updates, event recaps, founder stories, and what we're learning along the way.",
+    "Whenever a new post goes up, you'll see it show up under the bell in the header. Check back often.",
+  ],
+  image: "/assets/hero.png",
+};
 
 export const BLOGS: BlogPost[] = [
   {
@@ -73,20 +84,6 @@ export const BLOGS: BlogPost[] = [
           "BuildInPublic",
         ],
       },
-    ],
-  },
-  {
-    slug: "welcome-to-the-ecell-blog",
-    title: "Welcome to the E-Cell Blog",
-    excerpt:
-      "Updates, stories, and lessons from E-Cell SRMIST will land here first.",
-    date: "Oct 2, 2026",
-    author: "E-Cell SRMIST",
-    tags: ["Announcement", "E-Cell"],
-    image: "/assets/hero.png",
-    body: [
-      "This is the home for everything E-Cell SRMIST wants to say at more length than a social post allows — recruitment updates, event recaps, founder stories, and what we're learning along the way.",
-      "Whenever a new post goes up, you'll see it show up under the bell in the header. Check back often.",
     ],
   },
 ];
