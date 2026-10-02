@@ -267,3 +267,94 @@
   background: #1fb856;
   gap: 12px;
 }
+
+.notifList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.notifItem {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  padding: 14px 16px;
+  text-align: left;
+  background: #111111;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--off-white);
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.notifItem:hover {
+  border-color: var(--accent);
+}
+
+.notifTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.notifKind {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.newTag {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  color: var(--black);
+  background: var(--accent);
+  padding: 2px 6px;
+}
+
+.notifTitle {
+  font-family: var(--font-syne), sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.25;
+}
+
+.notifDate {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 10.5px;
+  color: var(--gray);
+}
+
+.allBlogs {
+  display: inline-block;
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 12px;
+  color: var(--accent);
+}
+
+.backBtn {
+  position: absolute;
+  top: 18px;
+  left: 26px;
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--gray);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.backBtn:hover {
+  color: var(--accent);
+}

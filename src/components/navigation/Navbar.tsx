@@ -3,8 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useApplyModal } from "@/context/ApplyModalContext";
+import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { scrollToTarget } from "@/lib/animations/scroll";
 import { LogIn } from "lucide-react";
@@ -15,14 +14,14 @@ const links = [
   { href: "#about", label: "ABOUT" },
   { href: "#domains", label: "DOMAINS" },
   { href: "#experience", label: "EXPERIENCE" },
-  { href: "#events", label: "EVENTS" },
 ];
 
 export default function Navbar() {
   const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const { openApplyModal } = useApplyModal();
+  const pathname = usePathname();
+  const isHome = pathname === "/";
   const { user, userProfile } = useAuth();
   const activeCandidate = userProfile || (user ? {
     displayName: user.displayName,
@@ -43,11 +42,6 @@ export default function Navbar() {
       document.body.style.overflow = "";
     };
   }, [open]);
-
-  const handleJoinClick = () => {
-    setOpen(false);
-    openApplyModal();
-  };
 
   return (
     <nav
@@ -81,19 +75,49 @@ export default function Navbar() {
       <ul className={`${styles.links} ${open ? styles.open : ""}`} id="navLinks">
         {links.map((l) => (
           <li key={l.href}>
-            <a
-              href={l.href}
-              data-cursor={l.label}
-              onClick={(e) => {
-                e.preventDefault();
-                setOpen(false);
-                scrollToTarget(l.href, -40);
-              }}
-            >
-              {l.label}
-            </a>
+            {isHome ? (
+              <a
+                href={l.href}
+                data-cursor={l.label}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setOpen(false);
+                  scrollToTarget(l.href, -40);
+                }}
+              >
+                {l.label}
+              </a>
+            ) : (
+              <Link
+                href={`/${l.href}`}
+                data-cursor={l.label}
+                onClick={() => setOpen(false)}
+              >
+                {l.label}
+              </Link>
+            )}
           </li>
         ))}
+
+        <li>
+          <Link
+            href="/events"
+            data-cursor="EVENTS"
+            onClick={() => setOpen(false)}
+          >
+            EVENTS
+          </Link>
+        </li>
+
+        <li>
+          <Link
+            href="/blogs"
+            data-cursor="BLOGS"
+            onClick={() => setOpen(false)}
+          >
+            BLOGS
+          </Link>
+        </li>
 
         <li>
           {activeCandidate ? (
@@ -137,17 +161,6 @@ export default function Navbar() {
 
         <li>
           <NotificationCenter />
-        </li>
-
-        <li>
-          <button
-            type="button"
-            className={styles.cta}
-            data-cursor="JOIN"
-            onClick={handleJoinClick}
-          >
-            JOIN NOW →
-          </button>
         </li>
       </ul>
 

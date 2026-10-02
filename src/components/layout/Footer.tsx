@@ -31,17 +31,20 @@ export default function Footer() {
           <div className={styles.cols}>
             <div className={styles.col}>
               <h5>Links</h5>
-              <a href="#about" data-cursor="→">
+              <a href="/#about" data-cursor="→">
                 About
               </a>
-              <a href="#domains" data-cursor="→">
+              <a href="/#domains" data-cursor="→">
                 Domains
               </a>
-              <a href="#experience" data-cursor="→">
+              <a href="/#experience" data-cursor="→">
                 Experience
               </a>
-              <a href="#events" data-cursor="→">
+              <a href="/events" data-cursor="→">
                 Events
+              </a>
+              <a href="/blogs" data-cursor="→">
+                Blogs
               </a>
               <button
                 type="button"
