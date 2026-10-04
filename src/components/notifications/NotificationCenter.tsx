@@ -12,7 +12,7 @@ import {
   DOMAIN_THEME,
   DomainId,
 } from "@/lib/announcements";
-import { BLOGS } from "@/lib/blogs";
+import { BLOGS, type BlogPost } from "@/lib/blogs";
 import { CyberpunkCard, ComicCard, OfficeCard } from "./ThemedAnnouncementCards";
 import styles from "./NotificationCenter.module.css";
 
@@ -57,10 +57,27 @@ export default function NotificationCenter() {
   const [pickedDomain, setPickedDomain] = useState<DomainId | null>(null);
 
   const latest = ANNOUNCEMENTS[0];
-  const blogNotifications = BLOGS.slice(0, MAX_BLOG_NOTIFICATIONS);
+  // Starts with the built-in posts, then picks up anything published from
+  // /admin once the server answers.
+  const [blogs, setBlogs] = useState<
+    Pick<BlogPost, "slug" | "title" | "date" | "publishedAt">[]
+  >(BLOGS);
+  const blogNotifications = blogs.slice(0, MAX_BLOG_NOTIFICATIONS);
 
   useEffect(() => {
     setSeen(getSeenIds());
+    let cancelled = false;
+    fetch("/api/blogs")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((all) => {
+        if (!cancelled && Array.isArray(all) && all.length > 0) setBlogs(all);
+      })
+      .catch(() => {
+        // Offline — the built-in posts still show.
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   // These announcements are for people who've actually applied, so the

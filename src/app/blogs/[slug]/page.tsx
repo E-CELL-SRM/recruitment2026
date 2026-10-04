@@ -1,16 +1,19 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import BlogView from "@/components/blogs/BlogView";
-import { BLOGS, getBlog } from "@/lib/blogs";
+import { getAllBlogs } from "@/lib/blogsServer";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export function generateStaticParams() {
-  return BLOGS.map((b) => ({ slug: b.slug }));
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  return (await getAllBlogs()).map((b) => ({ slug: b.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const post = getBlog((await params).slug);
+  const { slug } = await params;
+  const post = (await getAllBlogs()).find((b) => b.slug === slug);
   if (!post) return {};
   return {
     title: `${post.title} — E-Cell SRMIST`,
@@ -19,7 +22,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function BlogPostPage({ params }: Props) {
-  const post = getBlog((await params).slug);
+  const { slug } = await params;
+  const posts = await getAllBlogs();
+  const post = posts.find((b) => b.slug === slug);
   if (!post) notFound();
-  return <BlogView post={post} />;
+  return <BlogView post={post} posts={posts} />;
 }

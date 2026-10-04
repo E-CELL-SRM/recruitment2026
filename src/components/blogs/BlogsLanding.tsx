@@ -1,12 +1,12 @@
 import Image from "next/image";
 import Navbar from "@/components/navigation/Navbar";
 import Footer from "@/components/layout/Footer";
-import { BLOGS, BLOGS_INTRO } from "@/lib/blogs";
+import { BLOGS_INTRO, type BlogPost } from "@/lib/blogs";
 import BlogBanner from "./BlogBanner";
 import styles from "./BlogsLanding.module.css";
 
 // The /blogs landing page: a welcome, with a banner of every post below it.
-export default function BlogsLanding() {
+export default function BlogsLanding({ posts }: { posts: BlogPost[] }) {
   return (
     <div className={styles.page}>
       <Navbar />
@@ -37,7 +37,7 @@ export default function BlogsLanding() {
           <h2 className={styles.bannerHeading}>
             All Posts <span className={styles.rule} />
           </h2>
-          <BlogBanner posts={BLOGS} />
+          <BlogBanner posts={posts} />
         </section>
       </main>
       <Footer />

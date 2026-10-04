@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { initializeApp, cert, getApps } from "firebase-admin/app";
-import { getFirestore } from "firebase-admin/firestore";
 import { google } from "googleapis";
+import { getAdminDb, getServiceAccount } from "@/lib/firebaseAdmin";
 
 // ---------------------------------------------------------------------
 // GET /api/export-to-sheets
@@ -24,9 +23,6 @@ import { google } from "googleapis";
 //      client_email (found inside the key JSON) as an Editor.
 // ---------------------------------------------------------------------
 
-const FIRESTORE_DATABASE_ID =
-  "ai-studio-recruitment2026-19ddb4c5-2033-4dcd-be80-d274215eed06";
-
 const COLUMNS = [
   "id",
   "submittedAt",
@@ -44,24 +40,6 @@ const COLUMNS = [
   "reason",
   "userId",
 ] as const;
-
-function getServiceAccount() {
-  const raw = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
-  if (!raw) {
-    throw new Error("Missing FIREBASE_SERVICE_ACCOUNT_KEY env var");
-  }
-  return JSON.parse(raw);
-}
-
-function getFirestoreDb() {
-  const serviceAccount = getServiceAccount();
-  const appName = "export-to-sheets-admin";
-  const existing = getApps().find((a) => a.name === appName);
-  const app =
-    existing ||
-    initializeApp({ credential: cert(serviceAccount) }, appName);
-  return getFirestore(app, FIRESTORE_DATABASE_ID);
-}
 
 async function getSheetsClient() {
   const serviceAccount = getServiceAccount();
@@ -89,7 +67,7 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const db = getFirestoreDb();
+    const db = getAdminDb();
     const snap = await db.collection("applications").get();
     const rows = snap.docs.map((d) => d.data());
     rows.sort((a, b) => (a.submittedAt < b.submittedAt ? 1 : -1));

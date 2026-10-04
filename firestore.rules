@@ -7,6 +7,9 @@ rules_version = '2';
 // ----------
 // users/{uid}         — one doc per candidate, doc ID = Firebase Auth uid
 // applications/{id}   — one doc per submitted application, doc ID = tracking ID (e.g. EC26-TECH-1234)
+// blogs/{slug}        — one doc per blog post published from /admin, doc ID = URL slug
+// blogImages/{slug}   — that post's cover image bytes (private; served by /api/blog-image)
+// blogComments/{id}   — one doc per reader comment on a blog post, tagged with the post's slug
 //
 // Note: this app supports two sign-in paths — real Firebase "Google"
 // auth (request.auth is populated) and a client-side "email only"
@@ -71,5 +74,38 @@ service cloud.firestore {
 
       allow delete: if false;
     }
+
+    // Blog posts are public to read. They're only ever written by the
+    // password-protected /api/admin/blogs route, which uses the Admin SDK
+    // (it bypasses these rules), so clients can never write here.
+    match /blogs/{slug} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Anyone may read and add comments on a blog post (the site has no
+    // required sign-in), within strict length limits and with a
+    // server-set timestamp. Comments can't be edited or deleted by clients
+    // — remove a bad one from the Firebase console.
+    match /blogComments/{id} {
+      allow read: if true;
+      allow create: if
+        request.resource.data.keys().hasOnly(["slug", "name", "text", "createdAt"]) &&
+        request.resource.data.keys().hasAll(["slug", "name", "text", "createdAt"]) &&
+        request.resource.data.slug is string &&
+        request.resource.data.slug.size() > 0 &&
+        request.resource.data.slug.size() <= 100 &&
+        request.resource.data.name is string &&
+        request.resource.data.name.size() > 0 &&
+        request.resource.data.name.size() <= 60 &&
+        request.resource.data.text is string &&
+        request.resource.data.text.size() > 0 &&
+        request.resource.data.text.size() <= 1000 &&
+        request.resource.data.createdAt == request.time;
+      allow update, delete: if false;
+    }
+
+    // blogImages has no rule on purpose: Firestore denies everything not
+    // matched, so it's only reachable through the Admin SDK.
   }
 }

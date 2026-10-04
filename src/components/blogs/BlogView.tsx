@@ -1,14 +1,22 @@
 import Image from "next/image";
 import Navbar from "@/components/navigation/Navbar";
 import Footer from "@/components/layout/Footer";
-import { BLOGS, type BlogPost } from "@/lib/blogs";
+import type { BlogPost } from "@/lib/blogs";
 import BlogSidebar from "./BlogSidebar";
+import BlogComments from "./BlogComments";
 import styles from "./BlogView.module.css";
 
 // Shared layout for /blogs (latest post) and /blogs/[slug]: the open post on
 // the left, a scrolling list of every post on the right.
-export default function BlogView({ post }: { post: BlogPost }) {
-  const isLatest = post.slug === BLOGS[0]?.slug;
+export default function BlogView({
+  post,
+  posts,
+}: {
+  post: BlogPost;
+  // Every post, newest first.
+  posts: BlogPost[];
+}) {
+  const isLatest = post.slug === posts[0]?.slug;
 
   return (
     <div className={styles.page}>
@@ -21,6 +29,9 @@ export default function BlogView({ post }: { post: BlogPost }) {
               alt={post.title}
               fill
               priority
+              // Covers of posts published from /admin are served by
+              // /api/blog-image, which next/image isn't set up to optimize.
+              unoptimized={post.image.startsWith("/api/")}
               sizes="(max-width: 960px) 100vw, 68vw"
               className={styles.coverImg}
             />
@@ -65,9 +76,11 @@ export default function BlogView({ post }: { post: BlogPost }) {
               );
             })}
           </div>
+
+          <BlogComments slug={post.slug} />
         </article>
 
-        <BlogSidebar posts={BLOGS} activeSlug={post.slug} />
+        <BlogSidebar posts={posts} activeSlug={post.slug} />
       </main>
       <Footer />
     </div>

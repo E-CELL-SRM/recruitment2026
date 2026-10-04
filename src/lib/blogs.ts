@@ -1,8 +1,8 @@
 // ---------------------------------------------------------------------
 // Blog posts listed on /blogs and opened at /blogs/<slug>. Add a new entry to
-// BLOGS for each new post — newest first. The newest posts also surface in
-// the navbar notification bell (see NotificationCenter), so a new entry
-// here is all it takes to publish and announce a post.
+// BLOGS for each new post — newest first. Posts published from /admin are
+// stored in Firestore and merged with these (see blogsServer.ts). The newest
+// posts also surface in the navbar notification bell (see NotificationCenter).
 // ---------------------------------------------------------------------
 
 // A plain string is a paragraph; the objects give a post some structure.
@@ -17,7 +17,10 @@ export interface BlogPost {
   slug: string;
   title: string;
   excerpt: string;
+  // Display date, e.g. "Oct 2, 2026".
   date: string;
+  // ISO timestamp used to order posts, newest first.
+  publishedAt: string;
   author: string;
   tags: string[];
   // Cover image, served from /public (e.g. "/assets/hero.png").
@@ -44,6 +47,7 @@ export const BLOGS: BlogPost[] = [
     excerpt:
       "A sundae-in-a-can built for quick commerce — three startup lessons from Dairy Day's Ob & Gob.",
     date: "Oct 2, 2026",
+    publishedAt: "2026-10-02T00:00:00.000Z",
     author: "E-Cell SRMIST",
     tags: ["Entrepreneurship", "Startups", "Quick Commerce"],
     image: "/assets/blog-ob-gob.jpg",
