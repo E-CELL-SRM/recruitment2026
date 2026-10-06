@@ -28,15 +28,15 @@ export default function HeroTypography({
   return (
     <div className="hero-content">
       <div className="hero-eyebrow" ref={eyebrowRef}>
-        E-CELL SRMIST
+        SRM INSTITUTE OF SCIENCE AND TECHNOLOGY
       </div>
       <h1 className="hero-title">
         <span className="hero-line">
-          <span ref={line1Ref}>RECRUITMENT</span>
+          <span ref={line1Ref}>ENTREPRENEURSHIP</span>
         </span>
         <span className="hero-line">
           <span ref={line2Ref} className="hero-year">
-            <span ref={yearRef}>2026</span>
+            <span ref={yearRef}>CELL</span>
           </span>
         </span>
       </h1>
