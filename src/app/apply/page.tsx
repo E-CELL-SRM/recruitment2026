@@ -21,8 +21,8 @@ export default function ApplyPage() {
             height={36}
           />
           <span>
-            E-CELL SRMIST
-            <span className={styles.sub}>RECRUITMENT 2026</span>
+            SRM INSTUTE OF SCIENCE AND TECHNOLOGY
+            <span className={styles.sub}>ENTREPRENEURSHIP CELL</span>
           </span>
         </Link>
         <Link href="/" className={styles.back} data-cursor="BACK">
