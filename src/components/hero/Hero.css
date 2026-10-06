@@ -101,19 +101,21 @@
   font-weight: 500;
 }
 
-/* ---------- Hero title (RECRUITMENT / 2026) ---------- */
+/* ---------- Hero title (ENTREPRENEURSHIP / CELL) ---------- */
 .hero-title {
   font-family: var(--font-syne), sans-serif;
   font-weight: 800;
-  /* Derived from the actual available width (100vw minus the real side
-     padding), divided by the measured width-per-font-size-unit of the
-     widest word ("RECRUITMENT") in this font, so it always scales to
-     fit on one line no matter the viewport width. */
-  font-size: clamp(20px, calc((100vw - 2 * var(--hero-pad)) / 12.9), 116px);
+  /* CHANGED: sized so "ENTREPRENEURSHIP" (≈21.3 × font-size wide) fits on
+     one line. Divisor 22 = that width + a small safety margin. The max is
+     66px because the content box tops out at 1560px - 2*48px = 1464px
+     (1464 / 22 ≈ 66). If it overflows slightly raise 22 -> 23; if there's
+     a big gap on the right lower it to 21. */
+  font-size: clamp(14px, calc((100vw - 2 * var(--hero-pad)) / 22), 66px);
   line-height: 0.94;
   letter-spacing: -0.025em;
   text-transform: uppercase;
-  word-break: break-word;
+  white-space: nowrap; /* CHANGED: never wrap */
+  word-break: normal; /* CHANGED: was break-word, which split the word */
 }
 
 /* Line-clip wrapper (used by GSAP clip-path intro animation) */
@@ -241,7 +243,8 @@
   }
 
   .hero-title {
-    font-size: clamp(28px, 6vw, 54px);
+    /* CHANGED: same width-based formula so it still fits on one line */
+    font-size: clamp(14px, calc((100vw - 2 * var(--hero-pad)) / 22), 54px);
   }
 
   .hero-sub {
