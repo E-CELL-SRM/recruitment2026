@@ -5,14 +5,16 @@ import { getAdminDb } from "@/lib/firebaseAdmin";
 import { slugify } from "@/lib/blogUtils";
 import { parsePdfBlog } from "@/lib/pdfBlog";
 import { BLOGS } from "@/lib/blogs";
-import { formatYmd, isValidYmd, ymdToIso } from "@/lib/dates";
+import { postDate } from "@/lib/dates";
+import { UPLOAD_ID, deleteUploadChunks, readUploadChunks } from "@/lib/uploadChunks";
 import sharp from "sharp";
 
 // ---------------------------------------------------------------------
 // POST /api/admin/blogs   (multipart/form-data)
 //
 //   password   the admin password (checked here, on the server)
-//   file       the blog post as a PDF
+//   file       the blog post as a PDF — or, for big PDFs, uploadId +
+//              uploadChunks (see /api/admin/blog-upload)
 //   dryRun     "1" to only read the PDF and return a preview
 //   dateMode   "auto" (default: the day it's published) or "manual"
 //   date       YYYY-MM-DD, required when dateMode is "manual"
@@ -38,11 +40,28 @@ export async function POST(req: NextRequest) {
     return fail("Unauthorized", 401);
   }
 
-  const file = form.get("file");
-  if (!(file instanceof File)) return fail("Choose a PDF to upload.");
-  if (file.size > MAX_PDF_BYTES) return fail("That PDF is over 10 MB. Please compress it.", 413);
+  // The PDF arrives either whole (`file`) or as pieces already uploaded to
+  // /api/admin/blog-upload (`uploadId` + `uploadChunks`).
+  const uploadId = form.get("uploadId");
+  const chunkCount = Number(form.get("uploadChunks"));
+  const chunked =
+    typeof uploadId === "string" &&
+    UPLOAD_ID.test(uploadId) &&
+    Number.isInteger(chunkCount) &&
+    chunkCount >= 1 &&
+    chunkCount <= 20;
 
-  const bytes = new Uint8Array(await file.arrayBuffer());
+  let bytes: Uint8Array;
+  if (chunked) {
+    const joined = await readUploadChunks(uploadId, chunkCount).catch(() => null);
+    if (!joined) return fail("The upload expired — please choose the PDF again.");
+    bytes = joined;
+  } else {
+    const file = form.get("file");
+    if (!(file instanceof File)) return fail("Choose a PDF to upload.");
+    bytes = new Uint8Array(await file.arrayBuffer());
+  }
+  if (bytes.length > MAX_PDF_BYTES) return fail("That PDF is over 10 MB. Please compress it.", 413);
   if (String.fromCharCode(...bytes.slice(0, 4)) !== "%PDF") {
     return fail("That file isn't a PDF.");
   }
@@ -75,23 +94,9 @@ export async function POST(req: NextRequest) {
 
   // "auto" stamps the post with the moment it's published; "manual" uses the
   // date the admin picked.
-  let publishedAt: string;
-  let date: string;
-  if (form.get("dateMode") === "manual") {
-    const picked = form.get("date");
-    if (!isValidYmd(picked)) return fail("Pick a valid publish date.");
-    publishedAt = ymdToIso(picked);
-    date = formatYmd(picked);
-  } else {
-    const now = new Date();
-    publishedAt = now.toISOString();
-    date = now.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-      timeZone: "Asia/Kolkata",
-    });
-  }
+  const when = postDate(form.get("dateMode"), form.get("date"));
+  if (!when) return fail("Pick a valid publish date.");
+  const { publishedAt, date } = when;
 
   const post = {
     title: parsed.title,
@@ -132,6 +137,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    if (chunked) await deleteUploadChunks(uploadId, chunkCount).catch(() => {});
     revalidatePath("/blogs", "layout");
     return NextResponse.json({ ok: true, slug });
   } catch (err) {

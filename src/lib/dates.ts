@@ -49,3 +49,26 @@ export function formatYmdRange(start: string, end: string): string {
 export function ymdToIso(ymd: string): string {
   return new Date(`${ymd}T12:00:00+05:30`).toISOString();
 }
+
+// The two ways an admin dates a post: "auto" is the moment it's saved (shown
+// in India's calendar day), "manual" is a picked YYYY-MM-DD. Null if a manual
+// date is missing or invalid.
+export function postDate(
+  mode: unknown,
+  picked: unknown,
+): { publishedAt: string; date: string } | null {
+  if (mode === "manual") {
+    if (!isValidYmd(picked)) return null;
+    return { publishedAt: ymdToIso(picked), date: formatYmd(picked) };
+  }
+  const now = new Date();
+  return {
+    publishedAt: now.toISOString(),
+    date: now.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      timeZone: "Asia/Kolkata",
+    }),
+  };
+}

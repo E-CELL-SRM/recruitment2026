@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import ApplicationsPanel from "@/components/admin/ApplicationsPanel";
 import BlogPublisher from "@/components/admin/BlogPublisher";
+import BlogDateManager from "@/components/admin/BlogDateManager";
 import EventsManager from "@/components/admin/EventsManager";
 
 // ---------------------------------------------------------------------
@@ -27,6 +28,8 @@ export default function AdminPage() {
 
   const [section, setSection] = useState<Section>("applications");
   const [newApplications, setNewApplications] = useState(0);
+  // Bumped when a blog is published so the post-dates list reloads.
+  const [blogsVersion, setBlogsVersion] = useState(0);
 
   const handleUnlock = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -134,7 +137,8 @@ export default function AdminPage() {
           <ApplicationsPanel onNewCount={setNewApplications} />
         </div>
         <div style={{ display: section === "blog" ? "block" : "none" }}>
-          <BlogPublisher password={password} />
+          <BlogPublisher password={password} onPublished={() => setBlogsVersion((v) => v + 1)} />
+          <BlogDateManager password={password} reloadKey={blogsVersion} />
         </div>
         <div style={{ display: section === "events" ? "block" : "none" }}>
           <EventsManager password={password} />

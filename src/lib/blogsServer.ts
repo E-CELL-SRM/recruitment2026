@@ -46,13 +46,35 @@ async function fetchStoredBlogs(): Promise<BlogPost[]> {
   }
 }
 
+// Dates changed from /admin for the built-in posts (which live in code, so
+// their new date is kept in the `blogDateOverrides` collection, by slug).
+async function fetchDateOverrides(): Promise<Map<string, Pick<BlogPost, "date" | "publishedAt">>> {
+  const overrides = new Map<string, Pick<BlogPost, "date" | "publishedAt">>();
+  try {
+    const snap = await Promise.race([
+      getAdminDb().collection("blogDateOverrides").get(),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("timeout")), READ_TIMEOUT_MS),
+      ),
+    ]);
+    for (const d of snap.docs) {
+      const { date, publishedAt } = d.data();
+      if (isString(date) && isString(publishedAt)) overrides.set(d.id, { date, publishedAt });
+    }
+  } catch {
+    // Nothing overridden, or offline — built-in dates are used as written.
+  }
+  return overrides;
+}
+
 // Every post, newest first, each one once. The same PDF uploaded twice gets
 // two slugs but the same title, so posts are also matched by title and only
 // the newest copy is kept.
 export async function getAllBlogs(): Promise<BlogPost[]> {
-  const stored = await fetchStoredBlogs();
+  const [stored, overrides] = await Promise.all([fetchStoredBlogs(), fetchDateOverrides()]);
   const builtInSlugs = new Set(BLOGS.map((b) => b.slug));
-  const sorted = [...stored.filter((p) => !builtInSlugs.has(p.slug)), ...BLOGS].sort(
+  const builtIn = BLOGS.map((b) => ({ ...b, ...overrides.get(b.slug) }));
+  const sorted = [...stored.filter((p) => !builtInSlugs.has(p.slug)), ...builtIn].sort(
     (a, b) => (a.publishedAt < b.publishedAt ? 1 : -1),
   );
   const seen = new Set<string>();

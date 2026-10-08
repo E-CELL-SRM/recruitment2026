@@ -14,6 +14,8 @@ import type { BlogBlock } from "@/lib/blogs";
 // ---------------------------------------------------------------------
 
 const MAX_PDF_BYTES = 10 * 1024 * 1024;
+// Each piece must fit in a Firestore document (1 MiB) on the server.
+const CHUNK_BYTES = 700 * 1024;
 
 interface Published {
   slug: string;
@@ -55,7 +57,13 @@ interface Preview {
   cover: string | null;
 }
 
-export default function BlogPublisher({ password }: { password: string }) {
+export default function BlogPublisher({
+  password,
+  onPublished,
+}: {
+  password: string;
+  onPublished?: () => void;
+}) {
   const fileInput = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<Preview | null>(null);
@@ -90,10 +98,52 @@ export default function BlogPublisher({ password }: { password: string }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const send = (pdf: File, dryRun: boolean) => {
+  // Hosts like Vercel reject requests over ~4.5 MB, so the PDF is uploaded in
+  // small pieces first; the blog request then just names the upload.
+  const upload = useRef<{ id: string; chunks: number } | null>(null);
+
+  const postChunk = async (fields: Record<string, string>, chunk?: Blob) => {
     const form = new FormData();
     form.append("password", password);
-    form.append("file", pdf);
+    for (const [k, v] of Object.entries(fields)) form.append(k, v);
+    if (chunk) form.append("chunk", chunk);
+    const res = await fetch("/api/admin/blog-upload", { method: "POST", body: form });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data.error || "Couldn't upload the PDF.");
+    }
+  };
+
+  const discardUpload = () => {
+    const u = upload.current;
+    upload.current = null;
+    if (u) void postChunk({ uploadId: u.id, total: String(u.chunks), intent: "discard" }).catch(() => {});
+  };
+
+  const uploadPdf = async (pdf: File) => {
+    discardUpload();
+    const id = crypto.randomUUID();
+    const chunks = Math.max(1, Math.ceil(pdf.size / CHUNK_BYTES));
+    // A few pieces at a time — each one is a separate (slowish) database write.
+    let next = 0;
+    const worker = async () => {
+      while (next < chunks) {
+        const i = next++;
+        await postChunk(
+          { uploadId: id, index: String(i), total: String(chunks) },
+          pdf.slice(i * CHUNK_BYTES, (i + 1) * CHUNK_BYTES),
+        );
+      }
+    };
+    await Promise.all(Array.from({ length: Math.min(4, chunks) }, worker));
+    upload.current = { id, chunks };
+  };
+
+  const send = (dryRun: boolean) => {
+    const form = new FormData();
+    form.append("password", password);
+    form.append("uploadId", upload.current?.id ?? "");
+    form.append("uploadChunks", String(upload.current?.chunks ?? 0));
     if (dryRun) form.append("dryRun", "1");
     else {
       form.append("dateMode", dateMode);
@@ -103,6 +153,7 @@ export default function BlogPublisher({ password }: { password: string }) {
   };
 
   const reset = () => {
+    discardUpload();
     setFile(null);
     setPreview(null);
     setError(null);
@@ -144,12 +195,13 @@ export default function BlogPublisher({ password }: { password: string }) {
     setFile(chosen);
     setReading(true);
     try {
-      const res = await send(chosen, true);
+      await uploadPdf(chosen);
+      const res = await send(true);
       const data = await res.json().catch(() => ({}));
       if (!res.ok) setError(data.error || "Couldn't read that PDF.");
       else setPreview(data.preview);
-    } catch {
-      setError("Network error — couldn't read the PDF.");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Network error — couldn't read the PDF.");
     } finally {
       setReading(false);
     }
@@ -164,7 +216,7 @@ export default function BlogPublisher({ password }: { password: string }) {
     setPublishing(true);
     setError(null);
     try {
-      const res = await send(file, false);
+      const res = await send(false);
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         setError(data.error || "Could not publish the post.");
@@ -178,6 +230,7 @@ export default function BlogPublisher({ password }: { password: string }) {
       reset();
       window.scrollTo({ top: 0, behavior: "smooth" });
       void confirmLive(data.slug);
+      onPublished?.();
     } catch {
       setError("Network error — the post was not published.");
     } finally {
