@@ -10,6 +10,8 @@ rules_version = '2';
 // blogs/{slug}        — one doc per blog post published from /admin, doc ID = URL slug
 // blogImages/{slug}   — that post's cover image bytes (private; served by /api/blog-image)
 // blogComments/{id}   — one doc per reader comment on a blog post, tagged with the post's slug
+// events/{id}         — one doc per event added from /admin (private; read via the Admin SDK)
+// eventImages/{id}    — an event photo's bytes (private; served by /api/event-image)
 //
 // Note: this app supports two sign-in paths — real Firebase "Google"
 // auth (request.auth is populated) and a client-side "email only"

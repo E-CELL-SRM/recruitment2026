@@ -4,10 +4,12 @@ import { useState } from "react";
 import Link from "next/link";
 import ApplicationsPanel from "@/components/admin/ApplicationsPanel";
 import BlogPublisher from "@/components/admin/BlogPublisher";
+import EventsManager from "@/components/admin/EventsManager";
 
 // ---------------------------------------------------------------------
-// /admin — password-protected dashboard with two sections, picked from the
-// header: Applications (new ones flagged) and Publish Blog (PDF upload).
+// /admin — password-protected dashboard with three sections, picked from the
+// header: Applications (new ones flagged), Publish Blog (PDF upload) and
+// Events (add upcoming events, or past ones with photos).
 //
 // The password is checked on the server (/api/admin/verify) and sent again
 // with every blog upload to /api/admin/blogs, which re-checks it before
@@ -15,7 +17,7 @@ import BlogPublisher from "@/components/admin/BlogPublisher";
 // kept in memory, so reloading the page asks for it again.
 // ---------------------------------------------------------------------
 
-type Section = "applications" | "blog";
+type Section = "applications" | "blog" | "events";
 
 export default function AdminPage() {
   const [password, setPassword] = useState("");
@@ -103,6 +105,16 @@ export default function AdminPage() {
             >
               Publish Blog
             </button>
+            <button
+              type="button"
+              onClick={() => setSection("events")}
+              style={{
+                ...styles.navBtn,
+                ...(section === "events" ? styles.navBtnActive : {}),
+              }}
+            >
+              Events
+            </button>
           </nav>
           <div style={styles.headerRight}>
             <Link href="/" style={styles.headerLink}>
@@ -123,6 +135,9 @@ export default function AdminPage() {
         </div>
         <div style={{ display: section === "blog" ? "block" : "none" }}>
           <BlogPublisher password={password} />
+        </div>
+        <div style={{ display: section === "events" ? "block" : "none" }}>
+          <EventsManager password={password} />
         </div>
       </main>
     </div>

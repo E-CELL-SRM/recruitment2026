@@ -1,0 +1,20 @@
+.sectionHeading {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-family: var(--font-syne), sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  margin-bottom: 18px;
+}
+
+.pastHeading {
+  margin-top: 64px;
+}
+
+.rule {
+  flex: 1;
+  height: 1px;
+  background: var(--off-white);
+  opacity: 0.6;
+}

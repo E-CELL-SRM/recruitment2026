@@ -24,6 +24,13 @@ interface Published {
 // "checking" while we confirm the post is showing on the public Blogs page.
 type LiveStatus = "checking" | "live" | "pending";
 
+// Today's date in the browser as YYYY-MM-DD (what <input type="date"> uses).
+const todayYmd = () => {
+  const d = new Date();
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+};
+
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 // True once the post's own page loads AND it's listed on the Blogs page.
@@ -60,6 +67,9 @@ export default function BlogPublisher({ password }: { password: string }) {
   const [setup, setSetup] = useState<{ ready: boolean; problem?: string } | null>(null);
   const [published, setPublished] = useState<Published | null>(null);
   const [liveStatus, setLiveStatus] = useState<LiveStatus>("checking");
+  // "auto" dates the post the day it's published; "manual" uses `manualDate`.
+  const [dateMode, setDateMode] = useState<"auto" | "manual">("auto");
+  const [manualDate, setManualDate] = useState(todayYmd);
 
   const checkSetup = async () => {
     setSetup(null);
@@ -85,6 +95,10 @@ export default function BlogPublisher({ password }: { password: string }) {
     form.append("password", password);
     form.append("file", pdf);
     if (dryRun) form.append("dryRun", "1");
+    else {
+      form.append("dateMode", dateMode);
+      if (dateMode === "manual") form.append("date", manualDate);
+    }
     return fetch("/api/admin/blogs", { method: "POST", body: form });
   };
 
@@ -143,6 +157,10 @@ export default function BlogPublisher({ password }: { password: string }) {
 
   const handlePublish = async () => {
     if (!file) return;
+    if (dateMode === "manual" && !manualDate) {
+      setError("Pick the date to show on the post.");
+      return;
+    }
     setPublishing(true);
     setError(null);
     try {
@@ -319,6 +337,36 @@ export default function BlogPublisher({ password }: { password: string }) {
               ),
             )}
           </div>
+          <fieldset style={styles.dateBox}>
+            <legend style={styles.dateLegend}>Post date</legend>
+            <label style={styles.radioRow}>
+              <input
+                type="radio"
+                name="blog-date-mode"
+                checked={dateMode === "auto"}
+                onChange={() => setDateMode("auto")}
+              />
+              Use the day it&rsquo;s published
+            </label>
+            <label style={styles.radioRow}>
+              <input
+                type="radio"
+                name="blog-date-mode"
+                checked={dateMode === "manual"}
+                onChange={() => setDateMode("manual")}
+              />
+              Enter a date manually
+            </label>
+            {dateMode === "manual" && (
+              <input
+                type="date"
+                value={manualDate}
+                onChange={(e) => setManualDate(e.target.value)}
+                style={styles.dateInput}
+                aria-label="Post date"
+              />
+            )}
+          </fieldset>
           <div style={styles.btnRow}>
             <button
               type="button"
@@ -488,4 +536,26 @@ const styles: Record<string, React.CSSProperties> = {
     background: "rgba(74, 222, 128, 0.06)",
   },
   hashtags: { fontSize: "12px", color: "#4ade80", margin: "10px 0 0" },
+  dateBox: {
+    margin: "16px 0 0",
+    padding: "12px 14px",
+    border: "1px solid #222",
+    borderRadius: "8px",
+    display: "flex",
+    flexDirection: "column",
+    gap: "8px",
+  },
+  dateLegend: { fontSize: "11px", letterSpacing: "0.08em", textTransform: "uppercase", color: "#888", padding: "0 6px" },
+  radioRow: { display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: "#ddd", cursor: "pointer" },
+  dateInput: {
+    alignSelf: "flex-start",
+    padding: "8px 10px",
+    borderRadius: "6px",
+    border: "1px solid #333",
+    background: "#151515",
+    color: "#fff",
+    fontSize: "13px",
+    fontFamily: "inherit",
+    colorScheme: "dark",
+  },
 };

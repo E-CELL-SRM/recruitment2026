@@ -5,6 +5,7 @@ import { getAdminDb } from "@/lib/firebaseAdmin";
 import { slugify } from "@/lib/blogUtils";
 import { parsePdfBlog } from "@/lib/pdfBlog";
 import { BLOGS } from "@/lib/blogs";
+import { formatYmd, isValidYmd, ymdToIso } from "@/lib/dates";
 import sharp from "sharp";
 
 // ---------------------------------------------------------------------
@@ -13,6 +14,8 @@ import sharp from "sharp";
 //   password   the admin password (checked here, on the server)
 //   file       the blog post as a PDF
 //   dryRun     "1" to only read the PDF and return a preview
+//   dateMode   "auto" (default: the day it's published) or "manual"
+//   date       YYYY-MM-DD, required when dateMode is "manual"
 //
 // Reads the PDF (see lib/pdfBlog.ts) and publishes it to the `blogs`
 // Firestore collection, with the cover image stored in `blogImages` and
@@ -70,20 +73,34 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  const now = new Date();
+  // "auto" stamps the post with the moment it's published; "manual" uses the
+  // date the admin picked.
+  let publishedAt: string;
+  let date: string;
+  if (form.get("dateMode") === "manual") {
+    const picked = form.get("date");
+    if (!isValidYmd(picked)) return fail("Pick a valid publish date.");
+    publishedAt = ymdToIso(picked);
+    date = formatYmd(picked);
+  } else {
+    const now = new Date();
+    publishedAt = now.toISOString();
+    date = now.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      timeZone: "Asia/Kolkata",
+    });
+  }
+
   const post = {
     title: parsed.title,
     excerpt: parsed.excerpt,
     author: "E-Cell SRMIST",
     tags: parsed.tags,
     body: parsed.body,
-    publishedAt: now.toISOString(),
-    date: now.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-      timeZone: "Asia/Kolkata",
-    }),
+    publishedAt,
+    date,
   };
 
   try {

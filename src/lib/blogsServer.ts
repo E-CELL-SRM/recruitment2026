@@ -46,11 +46,20 @@ async function fetchStoredBlogs(): Promise<BlogPost[]> {
   }
 }
 
-// Every post, newest first.
+// Every post, newest first, each one once. The same PDF uploaded twice gets
+// two slugs but the same title, so posts are also matched by title and only
+// the newest copy is kept.
 export async function getAllBlogs(): Promise<BlogPost[]> {
   const stored = await fetchStoredBlogs();
   const builtInSlugs = new Set(BLOGS.map((b) => b.slug));
-  return [...stored.filter((p) => !builtInSlugs.has(p.slug)), ...BLOGS].sort(
+  const sorted = [...stored.filter((p) => !builtInSlugs.has(p.slug)), ...BLOGS].sort(
     (a, b) => (a.publishedAt < b.publishedAt ? 1 : -1),
   );
+  const seen = new Set<string>();
+  return sorted.filter((p) => {
+    const key = p.title.trim().toLowerCase().replace(/\s+/g, " ");
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }

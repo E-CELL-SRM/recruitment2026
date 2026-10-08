@@ -4,7 +4,6 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Search } from "lucide-react";
 import type { BlogPost } from "@/lib/blogs";
-import { useMarquee } from "./useMarquee";
 import styles from "./BlogView.module.css";
 
 interface Props {
@@ -27,45 +26,6 @@ export default function BlogSidebar({ posts, activeSlug }: Props) {
     );
   }, [posts, query]);
 
-  // The list cycles on its own, except while the visitor is searching.
-  const { ref, loop, copies, handlers } = useMarquee<HTMLUListElement>({
-    axis: "y",
-    count: visible.length,
-    enabled: !query.trim(),
-  });
-
-  const renderItem = (post: BlogPost, copy: number, index: number) => {
-    const dup = copy > 0;
-    return (
-      <li
-        key={`${post.slug}-${copy}`}
-        aria-hidden={dup || undefined}
-        data-dup={copy === 1 && index === 0 ? "" : undefined}
-      >
-        <Link
-          href={`/blogs/${post.slug}`}
-          className={`${styles.postItem} ${
-            post.slug === activeSlug ? styles.postItemActive : ""
-          } ${post.slug === latestSlug ? styles.postItemLatest : ""}`}
-          tabIndex={dup ? -1 : undefined}
-          data-cursor="READ"
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={post.image} alt="" className={styles.thumb} />
-          <span className={styles.postText}>
-            <span className={styles.postMeta}>
-              {post.slug === latestSlug && (
-                <span className={styles.latestTag}>LATEST</span>
-              )}
-              {post.date}
-            </span>
-            <span className={styles.postTitle}>{post.title}</span>
-          </span>
-        </Link>
-      </li>
-    );
-  };
-
   return (
     <aside className={styles.sidebar}>
       <label className={styles.search}>
@@ -83,15 +43,30 @@ export default function BlogSidebar({ posts, activeSlug }: Props) {
         <h3 className={styles.widgetTitle}>
           All Posts <span className={styles.rule} />
         </h3>
-        <ul
-          ref={ref}
-          className={`${styles.postList} ${loop ? styles.postListLoop : ""}`}
-          data-lenis-prevent
-          {...handlers}
-        >
-          {Array.from({ length: copies }, (_, c) =>
-            visible.map((post, i) => renderItem(post, c, i)),
-          )}
+        <ul className={styles.postList} data-lenis-prevent>
+          {visible.map((post) => (
+            <li key={post.slug}>
+              <Link
+                href={`/blogs/${post.slug}`}
+                className={`${styles.postItem} ${
+                  post.slug === activeSlug ? styles.postItemActive : ""
+                } ${post.slug === latestSlug ? styles.postItemLatest : ""}`}
+                data-cursor="READ"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={post.image} alt="" className={styles.thumb} />
+                <span className={styles.postText}>
+                  <span className={styles.postMeta}>
+                    {post.slug === latestSlug && (
+                      <span className={styles.latestTag}>LATEST</span>
+                    )}
+                    {post.date}
+                  </span>
+                  <span className={styles.postTitle}>{post.title}</span>
+                </span>
+              </Link>
+            </li>
+          ))}
           {visible.length === 0 && (
             <li className={styles.noResults}>No posts match &ldquo;{query}&rdquo;.</li>
           )}
