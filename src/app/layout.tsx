@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Syne, Inter, JetBrains_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import Providers from "@/components/providers/Providers";
 import "./globals.css";
 
@@ -71,6 +72,7 @@ export default function RootLayout({
     >
       <body className="antialiased">
         <Providers>{children}</Providers>
+        <Analytics />
       </body>
     </html>
   );
